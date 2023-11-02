@@ -10,13 +10,13 @@
                 @submit.prevent
             >
             <div class="login-title">北航十三公寓二手市场</div>
-            <!--input输入email-->
-            <el-form-item prop="email">
+            <!--input输入name-->
+            <el-form-item prop="name">
                 <el-input 
                 size="large" 
                 clearable 
-                placeholder="请输入邮箱" 
-                v-model.trim="formData.email"
+                placeholder="请输入用户名" 
+                v-model.trim="formData.name"
                 maxLength="150"
                 >
                 <!--加窗口小图标-->
@@ -25,13 +25,13 @@
                 </template>
                 </el-input>
             </el-form-item>
-            <!--输入密码-->
+            <!--登录密码-->
             <el-form-item prop="password">
                 <el-input
                     type="password"
                     size="large"
                     placeholder="请输入密码"
-                    v-model="formData.password"
+                    v-model.trim="formData.password"
                     show-password
                 >
                 <template #prefix>
@@ -39,6 +39,37 @@
                 </template>
                 </el-input>
             </el-form-item>
+
+            <!--注册新加-->
+            <div v-if="opType == 0||opType == 2">
+                <el-form-item prop="phone" v-if="opType==0">
+                    <el-input
+                        size="large"
+                        placeholder="请输入手机号"
+                        v-model.trim="formData.phone"
+                        maxLength="20"
+                    >
+                    <template #prefix>
+                    <span class="iconfont icon-account"></span>
+                    </template>    
+                </el-input>
+                    
+                </el-form-item>
+                
+                <el-form-item prop="wechat" v-if="opType==0">
+                    <el-input
+                        size="large"
+                        placeholder="请输入微信号"
+                        v-model.trim="formData.wechat"
+                    >
+                    <template #prefix>
+                    <span class="iconfont icon-account"></span>
+                    </template>    
+                </el-input>
+                    
+                </el-form-item>
+
+            </div>  
             <!--验证码-->
             <el-form-item prop="checkCode">
                 <div class="check-code-panel">
@@ -46,7 +77,7 @@
                     size="large"
                     clearable
                     placeholder="请输入验证码"
-                    v-model="formData.checkCode"
+                    v-model.trim="formData.checkCode"
                     >
                     <template #prefix>
                         <span class="iconfont icon-checkcode"></span>
@@ -61,19 +92,31 @@
                 
             </el-form-item>
 
-            <!--下拉框-->
-            <el-form-item>
+            <!--登录跳转按钮-->
+            <el-form-item v-if="opType==1">
                 <div class="rememberme-panel">
                     <el-checkbox v-model="formData.rememberme">记住我</el-checkbox>
                 </div>
                 <div class="no-account">
-                    <!--bass.scss中加了a-link-->
-                    <a href="javascript:void(0)" class="a-link">忘记密码?</a>
-                    <a href="javascript:void(0)" class="a-link">没有账号</a>
+                    <!--bass.scss中加了a-link;忘记密码就重置所以传2,没有账号就注册所以传0-->
+                    <a href="javascript:void(0)" class="a-link" @click="showPanel(2)">忘记密码?</a>
+                    <a href="javascript:void(0)" class="a-link" @click="showPanel(0)">没有账号</a>
                 </div>
             </el-form-item>
-            <!--登录按钮-->
-            <el-form-item label="" prop="">
+
+            <!--注册跳转按钮-->
+            <el-form-item v-if="opType==0">
+                <div class="no-account">
+                    <a href="javascript:void(0)" class="a-link" @click="showPanel(1)">去登录</a>
+                </div>
+            </el-form-item>
+            <!--登录\主策按钮-->
+            <el-form-item prop="" v-if="opType==1">
+                <el-button type="primary" class="op-btn" size="large">
+                    <span>登录</span>
+                </el-button>
+            </el-form-item>
+            <el-form-item prop="" v-if="opType==0">
                 <el-button type="primary" class="op-btn" size="large">
                     <span>注册</span>
                 </el-button>
@@ -91,8 +134,16 @@
         checkCode: "/api/checkCode",
     };
 
+    //操作类型 0:注册 1:登录 2:重置密码
+
+    const opType=ref(1);
+    const showPanel = (type)=>{
+        opType.value=type;
+    }
+
     const formData = ref({});
     const formDataRef = ref();
+    
     const rules = {
         title: [{ require: true, message: "请输入内容"}],
 
