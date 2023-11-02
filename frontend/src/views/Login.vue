@@ -17,7 +17,7 @@
                 clearable 
                 placeholder="请输入用户名" 
                 v-model.trim="formData.name"
-                maxLength="150"
+                maxLength="10"
                 >
                 <!--加窗口小图标-->
                 <template #prefix>
@@ -33,6 +33,7 @@
                     placeholder="请输入密码"
                     v-model.trim="formData.password"
                     show-password
+                    maxLength="20"
                 >
                 <template #prefix>
                     <span class="iconfont icon-password"></span>
@@ -61,6 +62,7 @@
                         size="large"
                         placeholder="请输入微信号"
                         v-model.trim="formData.wechat"
+                        maxLength="30"
                     >
                     <template #prefix>
                     <span class="iconfont icon-account"></span>
@@ -112,12 +114,12 @@
             </el-form-item>
             <!--登录\主策按钮-->
             <el-form-item prop="" v-if="opType==1">
-                <el-button type="primary" class="op-btn" size="large">
+                <el-button type="primary" class="op-btn" size="large" @click="doSubmit">
                     <span>登录</span>
                 </el-button>
             </el-form-item>
             <el-form-item prop="" v-if="opType==0">
-                <el-button type="primary" class="op-btn" size="large">
+                <el-button type="primary" class="op-btn" size="large" @click="doSubmit">
                     <span>注册</span>
                 </el-button>
             </el-form-item>
@@ -137,23 +139,62 @@
     //操作类型 0:注册 1:登录 2:重置密码
 
     const opType=ref(1);
+    //重置表单
+    const restForm = ()=>{
+        formDataRef.value.resetFields();
+        formData.value = {};
+        if (opType.value==1) {
+            //remember
+        }
+    }
     const showPanel = (type)=>{
         opType.value=type;
+        //切换时清空表单
+        restForm();
     }
 
     const formData = ref({});
     const formDataRef = ref();
     
-    const rules = {
-        title: [{ require: true, message: "请输入内容"}],
+    const checkRePassWord = (rule, value, callback) => {
+        if (value !== formData.value.registerPassword) {
+            callback(new Error(rule.message));
+        } else {
+            callback();
+        }
+    };
 
+    //prop:[] 添加约束
+    const rules = {    
+        title: [{ require: true, message: "请输入内容"}],
+        password: [{require: true, message: "请输入密码"},
+            {validtor:proxy.Verify.password, message:"密码只能是数字,字母,特殊字符,且要求8-18位"}],
+        wechat: [{require: true, message: "请输入微信号"}],
+        name: [{require: true, message: "请输入用户名"}],
+        registerPassword: [
+            {require: true, message: "请再次输入密码"},
+            {validtor: checkRePassWord, message:"两次输入的密码不一致"}
+        ],
     }; 
 
+    // 登录、注册提交表单
+
+
+
     //后端一个接口checkCodeUrl
-    const checkCodeUrl=ref(api.checkCode);
-    const changeCheckCode = (type) =>{
-        checkCodeUrl.value = api.checkCode + "?type=" + type + "&time=" + new Date().getTime(); 
+    //const checkCodeUrl=ref(api.checkCode);
+    //const changeCheckCode = (type) =>{
+    //    checkCodeUrl.value = api.checkCode + "?type=" + type + "&time=" + new Date().getTime(); 
         
+    //};
+
+    //检查数据正确性？？bug
+    const doSubmit=()=> {
+        formDataRef.value.validate(async (valid)=> {
+            if (!valid) {
+                return;
+            }
+        });
     };
 
 </script>
