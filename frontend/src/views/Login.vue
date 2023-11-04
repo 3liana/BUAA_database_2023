@@ -129,11 +129,21 @@
 </template>
 
 <script setup>
-    import {ref, reactive, getCurrentInstance, nextTick } from "vue"
+    //import { url } from "inspector";
+    import {ref, reactive, getCurrentInstance, nextTick } from "vue";
+    import {useRouter, useRoute} from "vue-router";
+    import md5 from "js-md5";
+
     const { proxy } = getCurrentInstance();
 
+    const router = useRouter();
+    const route = useRoute();
+    //接口
     const api = {
         checkCode: "/api/checkCode",
+        register:"/register",
+        login:"/login",
+
     };
 
     //操作类型 0:注册 1:登录 2:重置密码
@@ -145,13 +155,17 @@
         formData.value = {};
         if (opType.value==1) {
             //remember
+            const cookieLoginInfo = proxy.VueCookies.get("loginInfo");
+            if (cookieLoginInfo) {
+                formData.value = cookieLoginInfo;
+            }
         }
-    }
+    };
     const showPanel = (type)=>{
         opType.value=type;
         //切换时清空表单
         restForm();
-    }
+    };
 
     const formData = ref({});
     const formDataRef = ref();
@@ -189,12 +203,75 @@
     //};
 
     //检查数据正确性？？bug
+    //登录、注册、提交表单
     const doSubmit=()=> {
         formDataRef.value.validate(async (valid)=> {
             if (!valid) {
                 return;
             }
+            let params = {};
+            Object.assign(params, formData.value);
+            if (opType.value==0) {
+                //register
+                params.password=params.registerPassword;
+                //因为prop参数不一样
+                delete params.registerPassword;
+            }
+            //登录
+            if (opType.value==1) {
+                let cookieLoginInfo = proxy.VueCookies.get("loginInfo");
+                let cookiePassword = cookieLoginInfo==null ? null : cookieLoginInfo.password;
+                if (params.password !== cookiePassword) {
+                    //输入的密码不是从cookie中取的
+                    params.password = md5(params.password);
+
+                }
+
+            }
+
+
+            let url = null;
+            if(opType.value==0) {
+                url=api.register;
+            } else if (opType.value==1) {
+                url=api.login;
+            }
+            let result = await proxy.Request({
+                url:url,
+                params:params,
+                errorCallback:()=> {
+                    //刷新验证码(无)
+                },
+            })
+            if (!result) {
+                return;
+            }
+
+            //注册返回
+            if(opType.value==0) {
+                proxy.Message.success("注册成功，请登录");
+                showPanel(1);
+            } else if (opType.value==1) {
+                if (params.rememberMe) {
+                    //定义对象，将信息记录到cookie
+                    const loginInfo = {
+                        password:params.password,
+                        rememberMe:params.rememberMe
+                    };  
+                    //保留七天信息
+                    proxy.VueCookies.set("loginInfo", loginInfo, "7d");
+                } else {
+                    proxy.VueCookies.remove("loginInfo");
+                }
+                proxy.Message.success("登录成功");
+                //存储Cookie
+                proxy.VueCookies.set("userInfo", result.data, 0);
+                //重定向到原始页面
+                const redirectUrl = route.query.redirectUrl||"/";
+                router.push(redirectUrl);
+            } 
         });
+       
     };
 
 </script>
