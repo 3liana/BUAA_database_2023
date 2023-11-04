@@ -27,6 +27,7 @@ def check_username(username):
 
 
 class Register(APIView):
+    # 普通用户
     def post(self, request):
         data = request.data
         name = str(data.get('name'))
@@ -76,3 +77,54 @@ class Login(APIView):
                 request.session['name'] = name
                 request.session['type'] = type
         return Response({'value': value, 'type': type})
+
+
+class SetAvator(APIView):
+    def post(self, req: Request):
+        try:
+            user = req.data['user']
+            Avator.objects.filter(user=user).delete()  # 删除以前这个用户的头像
+            pic = Avator.objects.create(
+                file=req.FILES.get('photo'),
+                user=user,
+            )  # 创建新头像
+            pic.save()
+            return Response({
+                'value': 0,
+                'photo_id': pic.id,
+            })
+        except Exception as e:
+            print(e)
+            return Response({
+                'value': 1,
+                'photo_id': -1,
+            })
+
+
+class GetAvator(APIView):
+    def get(self, req: Request):
+        user = req.data['user']
+        try:
+            pic = Avator.objects.get(user=user)
+            return Response({
+                'value': 0,
+                'path': pic.file.path
+            })
+        except Avator.DoesNotExist:
+            return Response({
+                'value': 1
+            })
+
+
+class MyPosts(APIView):
+    def get(self, req: Request):
+        user = req.data['user']
+        posts = Post.objects.filter(user=user)
+        value = 1 if len(posts) == 0 else 0
+        return_data = []
+        for item in posts:
+            return_data.append(item.id)
+        return Response({
+            'value': value,
+            'post_ids': return_data
+        })

@@ -1,0 +1,7 @@
+python manage.py makemigrations  # 生成迁移文件
+python manage.py migrate  # 迁移数据库，创建新表
+python manage.py runserver
+superuser:
+-username:eliana
+-password:eliana
+-email:1012416935@qq.com

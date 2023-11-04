@@ -27,14 +27,6 @@ class Post(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
-class Order(models.Model):
-    time = models.DateTimeField(auto_now_add=True)
-    saler = models.ForeignKey(User, on_delete=models.CASCADE)
-    buyer = models.ForeignKey(User, on_delete=models.CASCADE)
-    saler_info = models.TextField()
-    buyer_info = models.TextField()
-
-
 class Notice(models.Model):
     time = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=TITLE_LEN)
@@ -47,8 +39,10 @@ class Tag(models.Model):
     num = models.IntegerField()  # 被引用次数
 
 
-class Photo(models.Model):
-    path = models.CharField(max_length=100)
+class Order(models.Model):
+    time = models.DateTimeField(auto_now_add=True)
+    saler = models.ForeignKey(User, on_delete=models.CASCADE,related_name='saler_order')
+    buyer = models.ForeignKey(User, on_delete=models.CASCADE,related_name='buyer_order')
 
 
 class Commodity(models.Model):
@@ -60,16 +54,14 @@ class Commodity(models.Model):
     # 如果order被删除，这个商品的order被设置为null
 
 
-# 关系表
-
-# 一对一联系
-class UserPhoto(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    photo = models.ForeignKey(Photo, on_delete=models.CASCADE)
+class Photo(models.Model):
+    file = models.ImageField(upload_to='pic/')
+    commodity = models.ForeignKey(Commodity, on_delete=models.CASCADE, null=True)
 
 
-# 一对多联系
-class CommodityPhoto(models.Model):
-    # 一件商品可能有多张图片
-    commodity = models.ForeignKey(Commodity, on_delete=models.CASCADE)
-    photo = models.ForeignKey(Photo, on_delete=models.CASCADE)
+class Avator(models.Model):
+    file = models.ImageField(upload_to='avator/')
+    user = models.ForeignKey(Commodity, on_delete=models.CASCADE, null=True)
+    # todo 设置default头像
+
+#
