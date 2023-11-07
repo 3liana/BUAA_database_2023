@@ -1,5 +1,6 @@
 import axios from 'axios'
 
+import { ElMessage } from 'element-plus';
 import { ElLoading } from 'element-plus'
 import router from '@/router'
 
@@ -18,7 +19,6 @@ const instance = axios.create({
 });
 //请求前拦截器
 instance.interceptors.request.use(
-    //请求之前做什么
     (config) => {
         if (config.showLoading) {
             loading = ElLoading.service({
@@ -30,7 +30,6 @@ instance.interceptors.request.use(
         return config;
     },
     (error) => {
-        //如果请求错误:
         if (config.showLoading && loading) {
             loading.close();
         }
@@ -38,8 +37,7 @@ instance.interceptors.request.use(
         return Promise.reject("请求发送失败");
     }
 );
-
-//请求后响应拦截器
+//请求后拦截器
 instance.interceptors.response.use(
     (response) => {
         const { showLoading, errorCallback, showError = true, responseType } = response.config;
@@ -89,23 +87,23 @@ const request = (config) => {
     }
 
     return instance.post(url, formData, {
-        onUploadProgress: (event) => {
-            if (config.uploadProgressCallback) {
-                config.uploadProgressCallback(event);
-            }
-        },
-        responseType: responseType,
-        headers: headers,
-        showLoading: showLoading,
-        errorCallback: config.errorCallback,
-        showError: config.showError
-    }).catch(error => {
-        console.log(error);
-        if (error.showError) {
-            Message.error(error.msg);
-        }
-        return null;
-    });
+                onUploadProgress: (event) => {
+                    if (config.uploadProgressCallback) {
+                        config.uploadProgressCallback(event);
+                    }
+                },
+                responseType: responseType,
+                headers: headers,
+                showLoading: showLoading,
+                errorCallback: config.errorCallback,
+                showError: config.showError
+             }).catch(error => {
+                console.log(error);
+                if (error.showError) {
+                    Message.error(error.msg);
+                }
+                return null;
+            });
 };
 
 export default request;
