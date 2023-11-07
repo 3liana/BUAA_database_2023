@@ -8,6 +8,9 @@ export default defineConfig({
   plugins: [
     vue(),
   ],
+  define: {
+    'process.env': {}
+  },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
@@ -18,9 +21,9 @@ export default defineConfig({
     hmr:true,
     proxy:{
       "/api":{
-        target:"http://localhost:7090",
+        target:"http://localhost:1024",
         changeOrigin:true,
-        patthRewrite:{
+        pathRewrite:{
           "^api": "/api"
         }
       }

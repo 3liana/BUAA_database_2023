@@ -121,7 +121,6 @@
     const route = useRoute();
     //接口
     const api = {
-        checkCode: "/api/checkCode",
         register:"/register",
         login:"/login",
 
@@ -156,7 +155,7 @@
     const formDataRef = ref();
     
     const checkRePassWord = (rule, value, callback) => {
-        if (value !== formData.value.registerPassword) {
+        if (value !== formData.value.password) {
             callback(new Error(rule.message));
         } else {
             callback();
@@ -198,9 +197,9 @@
             Object.assign(params, formData.value);
             if (opType.value==0) {
                 //register
-                params.password=params.registerPassword;
+                //params.password=params.registerPassword;
                 //因为prop参数不一样
-                delete params.registerPassword;
+                //delete params.registerPassword;
             }
             //登录
             if (opType.value==1) {
@@ -225,10 +224,12 @@
                 url:url,
                 params:params,
                 errorCallback:()=> {
+                   
                     //刷新验证码(无)
                 },
             })
             if (!result) {
+                
                 return;
             }
 
