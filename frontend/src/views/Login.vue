@@ -34,6 +34,7 @@
                     v-model.trim="formData.password"
                     show-password
                     maxLength="20"
+                    @keyup.enter="doSubmit"
                 >
                 <template #prefix>
                     <span class="iconfont icon-password"></span>
@@ -72,27 +73,7 @@
                 </el-form-item>
 
             </div>  
-            <!--验证码-->
-            <el-form-item prop="checkCode">
-                <div class="check-code-panel">
-                    <el-input
-                    size="large"
-                    clearable
-                    placeholder="请输入验证码"
-                    v-model.trim="formData.checkCode"
-                    >
-                    <template #prefix>
-                        <span class="iconfont icon-checkcode"></span>
-                    </template>
-                    </el-input>
-                    <img 
-                    src="checkCodeUrl"
-                    class="check-code" 
-                    @click="changeCheckCode(0)"
-                    />
-                </div>
-                
-            </el-form-item>
+           
 
             <!--登录跳转按钮-->
             <el-form-item v-if="opType==1">
@@ -130,7 +111,7 @@
 
 <script setup>
     //import { url } from "inspector";
-    import {ref, reactive, getCurrentInstance, nextTick } from "vue";
+    import {ref, reactive, getCurrentInstance, nextTick, onMounted } from "vue";
     import {useRouter, useRoute} from "vue-router";
     import md5 from "js-md5";
 
@@ -166,6 +147,10 @@
         //切换时清空表单
         restForm();
     };
+
+    onMounted(()=>{
+        showPanel(1);
+    })
 
     const formData = ref({});
     const formDataRef = ref();
@@ -265,6 +250,7 @@
                 }
                 proxy.Message.success("登录成功");
                 //存储Cookie
+                //登录成功
                 proxy.VueCookies.set("userInfo", result.data, 0);
                 //重定向到原始页面
                 const redirectUrl = route.query.redirectUrl||"/";
