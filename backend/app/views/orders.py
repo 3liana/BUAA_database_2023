@@ -39,12 +39,33 @@ class CancelOrder(APIView):
         data = req.data
         order = data['order']
         try:
-            Order.objects.get(id=order).delete() # 删除order元组
+            Order.objects.get(id=order).delete()  # 删除order元组
             # 其实好像 on_delete=models.SET_NULL 自动就会设置了
-            c0 = Commodity.objects.get(order=order) # 修改commodity元组
+            c0 = Commodity.objects.get(order=order)  # 修改commodity元组
             c0.order = None
             c0.save()
             return (0)
+        except Exception as e:
+            print(e)
+            return (1)
+
+
+class getOrder(APIView):
+    def get(self, req: Request):
+        data = req.data
+        order = data['order']
+        try:
+            item = Order.objects.get(id=order)
+            saler = item.saler
+            saler_id = saler.id
+            buyer_id = item.buyer.id
+            commodity = Commodity.objects.get(order__id=order)
+            return ({
+                'time': order.time.isoformat(),
+                'saler_id': saler_id,
+                'buyer_id': buyer_id,
+                'commodity_id':commodity.id,
+            })
         except Exception as e:
             print(e)
             return (1)

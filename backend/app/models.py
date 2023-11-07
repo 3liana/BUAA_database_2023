@@ -64,4 +64,4 @@ class Avator(models.Model):
     user = models.ForeignKey(Commodity, on_delete=models.CASCADE, null=True)
     # todo 设置default头像
 
-#
+

@@ -40,7 +40,7 @@ class Register(APIView):
             return Response(2)  # 此微信号已注册账号
         try:
             u = User.objects.create(
-                name=name,
+                username=name,
                 password=password,
                 phone=phone,
                 wechat=wechat,
@@ -127,4 +127,31 @@ class MyPosts(APIView):
         return Response({
             'value': value,
             'post_ids': return_data
+        })
+
+
+class MyOrdersAsSaler(APIView):
+    def get(self, req: Request):
+        user = req.data['user']
+        orders = Order.objects.filter(saler=user)
+        value = 1 if len(orders) == 0 else 0
+        return_data = []
+        for item in orders:
+            return_data.append(item.id)
+        return Response({
+            'value': value,
+            'order_ids': return_data,
+        })
+
+class MyOrdersAsBuyer(APIView):
+    def get(self, req: Request):
+        user = req.data['user']
+        orders = Order.objects.filter(buyer=user)
+        value = 1 if len(orders) == 0 else 0
+        return_data = []
+        for item in orders:
+            return_data.append(item.id)
+        return Response({
+            'value': value,
+            'order_ids': return_data,
         })
