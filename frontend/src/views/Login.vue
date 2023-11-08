@@ -258,7 +258,6 @@
 
             //注册返回
             if(opType.value==0) {
-                //登录成功：
                 proxy.Message.success("注册成功，请登录");
                 showPanel(1);
             } else if (opType.value==1&&value.value==0) {

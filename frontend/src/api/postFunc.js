@@ -14,3 +14,20 @@ export function userLogin(name, password) {
 	data.append("password",password);
 	return post('/api/login/',data);
 }
+
+export function setAvator(user, photo) {
+	var data = new FormData();
+	data.append("user", user);
+	data.append("photo", photo);
+	return post('/api/setAvatar', data);
+}
+
+export function getAvator(user) {
+	return get('/api/getAvatar/'+`${user}`);
+}
+
+export function logout() {
+	var data = new FormData();
+	return post('/api/logout', data);
+}
+
