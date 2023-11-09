@@ -1,5 +1,4 @@
 import { ElMessage } from 'element-plus'
-import axios from 'axios';
 
 const showMessage = (msg, callback, type) => {
     ElMessage({
@@ -24,6 +23,6 @@ const message = {
     warning: (msg, callback) => {
         showMessage(msg, callback, "warning");
     },
-} 
+}
 
 export default message;

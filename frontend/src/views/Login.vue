@@ -7,7 +7,7 @@
                 :model="formData"
                 :rules="rules"
                 ref="formDataRef"
-                @submit.prevent
+                
             >
             <div class="login-title">北航十三公寓二手市场</div>
             <!--input输入name-->
@@ -34,7 +34,7 @@
                     v-model.trim="formData.password"
                     show-password
                     maxLength="20"
-                    @keyup.enter="doSubmit"
+                    
                 >
                 <template #prefix>
                     <span class="iconfont icon-password"></span>
@@ -110,10 +110,12 @@
 </template>
 
 <script setup>
+
     //import { url } from "inspector";
     import {ref, reactive, getCurrentInstance, nextTick, onMounted } from "vue";
     import {useRouter, useRoute} from "vue-router";
     import md5 from "js-md5";
+    import { inviteUserIntoChatGroup , userLogin} from "../api/postFunc";
 
     const { proxy } = getCurrentInstance();
 
@@ -121,10 +123,8 @@
     const route = useRoute();
     //接口
     const api = {
-        checkCode: "/api/checkCode",
-        register:"/register",
-        login:"/login",
-
+        register:"/register/",
+        login:"/login/",
     };
 
     //操作类型 0:注册 1:登录 2:重置密码
@@ -156,7 +156,7 @@
     const formDataRef = ref();
     
     const checkRePassWord = (rule, value, callback) => {
-        if (value !== formData.value.registerPassword) {
+        if (value !== formData.value.password) {
             callback(new Error(rule.message));
         } else {
             callback();
@@ -189,6 +189,8 @@
 
     //检查数据正确性？？bug
     //登录、注册、提交表单
+
+
     const doSubmit=()=> {
         formDataRef.value.validate(async (valid)=> {
             if (!valid) {
@@ -196,47 +198,69 @@
             }
             let params = {};
             Object.assign(params, formData.value);
-            if (opType.value==0) {
-                //register
-                params.password=params.registerPassword;
-                //因为prop参数不一样
-                delete params.registerPassword;
-            }
+            console.log(params);
+        
             //登录
+            var value;
             if (opType.value==1) {
                 let cookieLoginInfo = proxy.VueCookies.get("loginInfo");
                 let cookiePassword = cookieLoginInfo==null ? null : cookieLoginInfo.password;
                 if (params.password !== cookiePassword) {
                     //输入的密码不是从cookie中取的
                     params.password = md5(params.password);
-
                 }
+                value = userLogin(params);
+                value.then((result) => {
+                    console.log(result)
+                    if (result.value == 0) {
+                        
+                    } else if (result.value == 1) {
+                        alert('用户名不存在')
+                        return;
+                    } else if (result.value == 2) {
+                        alert('密码错误')
+                        return;
+                    } 
+                    //result.type -> 用户类型
+                })
+            } else if (opType == 0) {
+                value = inviteUserIntoChatGroup(params);
+                value.then((result) => {
+                    console.log(result)
+                    if (result.value == 0) {
 
+                    } else if (result.value == 1) {
+                        alert('不满足数据约束条件')
+                        return;
+                    } else if (result.value == 2) {
+                        alert('此微信号已被注册')
+                        return;
+                    } else if (result.value == 3) {
+                        alert('此用户名已被注册')
+                        return;
+                    }
+                })
             }
 
 
-            let url = null;
-            if(opType.value==0) {
-                url=api.register;
-            } else if (opType.value==1) {
-                url=api.login;
-            }
-            let result = await proxy.Request({
+            /*let result = await proxy.Request({
                 url:url,
                 params:params,
                 errorCallback:()=> {
+                   
                     //刷新验证码(无)
                 },
             })
             if (!result) {
+                
                 return;
-            }
+            }*/
 
             //注册返回
             if(opType.value==0) {
                 proxy.Message.success("注册成功，请登录");
                 showPanel(1);
-            } else if (opType.value==1) {
+            } else if (opType.value==1&&value.value==0) {
                 if (params.rememberMe) {
                     //定义对象，将信息记录到cookie
                     const loginInfo = {
@@ -259,6 +283,8 @@
         });
        
     };
+
+
 
 </script>
 
