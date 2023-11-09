@@ -15,15 +15,25 @@ def check_wechat(wechat):
 
 
 def check_username(username):
-    try:
-        User.objects.get(username=username)
-        return 1
-    except User.DoesNotExist:
-        try:
-            Administrator.objects.get(username=username)
-            return 2
-        except Administrator.DoesNotExist:
-            return 0
+    # todo debug 没有try exception会报错
+    # value = 0
+    user = User.objects.get(username=username)
+    if user == None:
+        admin =  Administrator.objects.get(username=username)
+        if admin == None:
+            return 1
+    return 0
+
+    # try:
+    #
+    #     print(user)
+    #     return 1
+    # except User.DoesNotExist:
+    #     try:
+    #         Administrator.objects.get(username=username)
+    #         return 2
+    #     except Administrator.DoesNotExist:
+    #         return 0
 
 
 class Register(APIView):
@@ -34,10 +44,10 @@ class Register(APIView):
         password = str(data.get('password'))
         phone = str(data.get('phone'))
         wechat = str(data.get('wechat'))
-        if check_username(name) != 0:
-            return Response(3)  # 此用户名已被注册
-        if check_wechat(wechat) == 1:
-            return Response(2)  # 此微信号已注册账号
+        # if check_username(name) != 0:
+        #     return Response({"value": 3})  # 此用户名已被注册
+        # if check_wechat(wechat) == 1:
+        #     return Response({"value": 2})  # 此微信号已注册账号
         try:
             u = User.objects.create(
                 username=name,
@@ -48,8 +58,8 @@ class Register(APIView):
             u.save()
         except Exception as e:
             print(e)
-            return Response(1)  # 数据未成功录入数据库
-        return Response(0)
+            return Response({"value": 1})  # 数据未成功录入数据库
+        return Response({"value": 0})
 
 
 class Login(APIView):
@@ -142,6 +152,7 @@ class MyOrdersAsSaler(APIView):
             'value': value,
             'order_ids': return_data,
         })
+
 
 class MyOrdersAsBuyer(APIView):
     def get(self, req: Request):
