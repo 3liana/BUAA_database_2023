@@ -6,48 +6,42 @@ from app.models import *
 
 
 def check_wechat(wechat):
+    value = 0
     try:
         User.objects.get(wechat=wechat)
-        return 1
     except User.DoesNotExist:
-        return 0
-    # 未注册返回0，已注册返回1
+        value = 1 # 具有相同wechat的用户不存在 check通过
+    return value == 1
 
 
 def check_username(username):
-    # todo debug 没有try exception会报错
-    # value = 0
-    user = User.objects.get(username=username)
-    if user == None:
-        admin =  Administrator.objects.get(username=username)
-        if admin == None:
-            return 1
-    return 0
-
-    # try:
-    #
-    #     print(user)
-    #     return 1
-    # except User.DoesNotExist:
-    #     try:
-    #         Administrator.objects.get(username=username)
-    #         return 2
-    #     except Administrator.DoesNotExist:
-    #         return 0
+    value = 0
+    try:
+        User.objects.get(username=username)
+    except User.DoesNotExist:
+        value = 1
+        try:
+            Administrator.objects.get(username=username)
+        except Administrator.DoesNotExist:
+            value = 2
+    # value == 2 代表 库中不存在此username 即check通过
+    return value == 2
 
 
 class Register(APIView):
     # 普通用户
     def post(self, request):
         data = request.data
+        print("register data:")
+        print(request.data)
         name = str(data.get('name'))
         password = str(data.get('password'))
         phone = str(data.get('phone'))
         wechat = str(data.get('wechat'))
-        # if check_username(name) != 0:
-        #     return Response({"value": 3})  # 此用户名已被注册
-        # if check_wechat(wechat) == 1:
-        #     return Response({"value": 2})  # 此微信号已注册账号
+        if not check_username(name):
+            return Response({"value": 3})  # 此用户名已被注册
+        if not check_wechat(wechat) :
+            return Response({"value": 2})  # 此微信号已注册账号
         try:
             u = User.objects.create(
                 username=name,
@@ -65,6 +59,8 @@ class Register(APIView):
 class Login(APIView):
     def post(self, request):
         data = request.data
+        print("login data:")
+        print(data) #debug
         name = data.get('name')
         password = data.get('password')
         value = 0
