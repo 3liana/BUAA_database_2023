@@ -1,17 +1,19 @@
 import { post, get} from './api';
-export function inviteUserIntoChatGroup(name,password,phone,wechat){
+export function inviteUserIntoChatGroup(params){
 	var data=new FormData();
-	data.append("name",name);
-	data.append("password",password);
-    data.append("phone",phone);
-	data.append("wehcat",wechat);
+	data.append("name",params.name);
+	data.append("password",params.password);
+    data.append("phone",params.phone);
+	data.append("wehcat",params.wechat);
+	console.log(params);
 	return post('/api/register/',data);
 }
 
-export function userLogin(name, password) {
+export function userLogin(params) {
     var data=new FormData();
-	data.append("name",name);
-	data.append("password",password);
+	data.append("name",params.name);
+	data.append("password",params.password);
+	
 	return post('/api/login/',data);
 }
 

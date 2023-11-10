@@ -26,9 +26,15 @@
             <el-dropdown>
                 <div class="user-info">
                     <div class="avatar">
-                      <Avatar :user="userInfo.username" v-if="userInfo && userInfo.username"></Avatar>
+                      <Avatar 
+                      :name="userInfo.name" 
+                      :avatar="userInfo.avatar"
+                      :timestamp="timestamp"
+                      :width="46"
+                      v-if="userInfo && userInfo.name"
+                      ></Avatar>
                     </div>
-                    <span class="username" v-if="userInfo">{{ userInfo.username }}</span>
+                    <span class="nick-name" v-if="userInfo">{{ userInfo.name }}</span>
                 </div>
                 <template #dropdown>
                     <el-dropdown-menu>
@@ -75,7 +81,11 @@
               </router-view>
             </div>
         </div>
-        <UpdateAvatar ref="updateAvatarRef" @updateAvatar="reloadAvatar"></UpdateAvatar>
+        <!--修改头像-->
+        <UpdateAvatar 
+          ref="updateAvatarRef"
+          @updateAvatar="reloadAvatar"
+        ></UpdateAvatar>
     </div>
 </template>
 
@@ -90,6 +100,8 @@ import {
 } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import UpdateAvatar from "./UpdateAvatar.vue";
+import Avatar from "../components/Avatar.vue";
+import Dialog from "../components/Dialog.vue";
 const { proxy } = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();

@@ -12,7 +12,8 @@
             :model="formData"
             ref="formDataRef"
             label-width="80px"
-            @submit.prevent>
+            @submit.prevent
+        >
             <!--input输入-->
             <el-form-item label="用户名" prop="">
                 {{ formData.name }}

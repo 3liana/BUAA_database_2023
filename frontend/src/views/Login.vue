@@ -198,17 +198,19 @@
             }
             let params = {};
             Object.assign(params, formData.value);
-            console.log(params);
+           
         
             //登录
             var value;
             if (opType.value==1) {
+                console.log("login");
+                //console.log(params);
                 let cookieLoginInfo = proxy.VueCookies.get("loginInfo");
                 let cookiePassword = cookieLoginInfo==null ? null : cookieLoginInfo.password;
-                if (params.password !== cookiePassword) {
+                /*if (params.password !== cookiePassword) {
                     //输入的密码不是从cookie中取的
                     params.password = md5(params.password);
-                }
+                }*/
                 value = userLogin(params);
                 value.then((result) => {
                     console.log(result)
@@ -223,7 +225,8 @@
                     } 
                     //result.type -> 用户类型
                 })
-            } else if (opType == 0) {
+            } else if (opType.value == 0) {
+                //console.log(params);
                 value = inviteUserIntoChatGroup(params);
                 value.then((result) => {
                     console.log(result)
