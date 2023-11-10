@@ -10,7 +10,7 @@ def check_wechat(wechat):
     try:
         User.objects.get(wechat=wechat)
     except User.DoesNotExist:
-        value = 1 # 具有相同wechat的用户不存在 check通过
+        value = 1  # 具有相同wechat的用户不存在 check通过
     return value == 1
 
 
@@ -40,7 +40,7 @@ class Register(APIView):
         wechat = str(data.get('wechat'))
         if not check_username(name):
             return Response({"value": 3})  # 此用户名已被注册
-        if not check_wechat(wechat) :
+        if not check_wechat(wechat):
             return Response({"value": 2})  # 此微信号已注册账号
         try:
             u = User.objects.create(
@@ -60,7 +60,7 @@ class Login(APIView):
     def post(self, request):
         data = request.data
         print("login data:")
-        print(data) #debug
+        print(data)  # debug
         name = data.get('name')
         password = data.get('password')
         value = 0
@@ -88,8 +88,9 @@ class Login(APIView):
 class SetAvator(APIView):
     def post(self, req: Request):
         try:
-            user = req.data['user']
-            Avator.objects.filter(user=user).delete()  # 删除以前这个用户的头像
+            username = req.data['username']  # 得到用户名
+            user = User.objects.get(username=username)  # 查找用户对象
+            Avator.objects.filter(user=user).delete()  # 根据用户对象找到头图对象 删除以前这个用户的头像
             pic = Avator.objects.create(
                 file=req.FILES.get('photo'),
                 user=user,
@@ -109,8 +110,9 @@ class SetAvator(APIView):
 
 class GetAvator(APIView):
     def get(self, req: Request):
-        user = req.data['user']
+        username = req.data['username']
         try:
+            user = User.objects.get(username=username)
             pic = Avator.objects.get(user=user)
             return Response({
                 'value': 0,
@@ -124,7 +126,9 @@ class GetAvator(APIView):
 
 class MyPosts(APIView):
     def get(self, req: Request):
-        user = req.data['user']
+        username = req.data['username']
+        # 感觉不用try 只有登录的user才能使用这个功能 所以一定能查找到user
+        user = User.objects.get(username=username)
         posts = Post.objects.filter(user=user)
         value = 1 if len(posts) == 0 else 0
         return_data = []
@@ -138,7 +142,8 @@ class MyPosts(APIView):
 
 class MyOrdersAsSaler(APIView):
     def get(self, req: Request):
-        user = req.data['user']
+        username = req.data['username']
+        user = User.objects.get(username=username)
         orders = Order.objects.filter(saler=user)
         value = 1 if len(orders) == 0 else 0
         return_data = []
@@ -152,7 +157,8 @@ class MyOrdersAsSaler(APIView):
 
 class MyOrdersAsBuyer(APIView):
     def get(self, req: Request):
-        user = req.data['user']
+        username = req.data['username']
+        user = User.objects.get(username=username)
         orders = Order.objects.filter(buyer=user)
         value = 1 if len(orders) == 0 else 0
         return_data = []
