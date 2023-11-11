@@ -7,8 +7,9 @@ from app.models import *
 
 class CreatePost(APIView):
     def post(self, req: Request):
-        user = req.session.get('id')
         data = req.data
+        username = data['username']
+        user = User.objects.get(username=username)
         title = data['title']
         content = data['content']
         post_id = -1
@@ -17,6 +18,7 @@ class CreatePost(APIView):
             post = Post.objects.create(
                 title=title,
                 content=content,
+                # user = user,
                 user=user,
             )
             post_id = post.id
@@ -29,7 +31,7 @@ class CreatePost(APIView):
 
 class DeletePost(APIView):
     def post(self,req:Request):
-        post_id = req.data['post']
+        post_id = req.data['post_id']
         value = 1
         try:
             Post.objects.get(id=post_id).delete()
@@ -40,11 +42,12 @@ class DeletePost(APIView):
 
 
 
-class getPostCommodities(APIView):
+class GetPostCommodities(APIView):
     def get(self, req: Request):
         post_id = req.data['post_id']
+        post = Post.objects.get(id=post_id)
         return_data = []
-        commodities = Commodity.objects.filter(post=post_id)
+        commodities = Commodity.objects.filter(post=post)
         for item in commodities:
             return_data.append({
                 'commodity_id': item.id,
@@ -55,7 +58,7 @@ class getPostCommodities(APIView):
         return Response({'commodities': return_data})
 
 
-class getPost(APIView):
+class GetPost(APIView):
     def get(self, req: Request):
         post_id = req.data['post_id']
         post = Post.objects.get(id=post_id)  # 根据主键查找
