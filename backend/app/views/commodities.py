@@ -21,10 +21,11 @@ class CreateCommodity(APIView):
         name = data['name']
         description = data['dc']
         price = int(data['price'])
-        post = int(data['post_id'])
+        post_id = int(data['post_id'])
         value = -1
         commodity_id = -1
         try:
+            post = Post.objects.get(id=post_id)
             commodity = Commodity.objects.create(
                 name=name,
                 description=description,
@@ -44,7 +45,8 @@ class GetCommodityPictures(APIView):
     def get(self, req: Request):
         commodity_id = req.data['commodity_id']
         return_data = []
-        pictures = Photo.objects.filter(commodity=commodity_id)
+        commodity = Commodity.objects.get(id=commodity_id)
+        pictures = Photo.objects.filter(commodity=commodity)
         for item in pictures:
             return_data.append({
                 'photo_id': item.id,
@@ -55,28 +57,30 @@ class GetCommodityPictures(APIView):
 
 class AddCommodityPicture(APIView):
     def post(self, req: Request):
+        commodity_id = req.data.get('commodity_id')
+        value = 0
+        pic_id = -1
         try:
+            commodity = Commodity.objects.get(id=commodity_id)
             pic = Photo.objects.create(
                 file=req.FILES.get('photo'),
-                commodity=req.data['commodity'],
+                commodity=commodity,
             )
+            pic_id = pic.id
             pic.save()
-            return Response({
-                'value': 0,
-                'photo_id': pic.id,
-            })
         except Exception as e:
+            value = 1
             print(e)
-            return Response({
-                'value': 1,
-                'photo_id': -1,
+        return Response({
+                'value': value,
+                'photo_id': pic_id,
             })
 
 
 class CheckIfOrdered(APIView):
     def post(self, req: Request):
-        commodity = req.data['commodity']
-        c0 = Commodity.objects.get(id=commodity)
+        commodity_id = req.data['commodity_id']
+        c0 = Commodity.objects.get(id=commodity_id)
         if c0.order is None:
             return Response(0)
         else:
