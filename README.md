@@ -1,4 +1,12 @@
 # BUAA_database_2023
+### 仓库管理（fmy）
+
+在main分支中更改frontend
+
+在fmy分支中更改backend，然后手动合并和主分支main的冲突，然后pull request
+
+(其本质是确保主分支main中始终有最新的backend和frontend,并且不相互覆盖）
+
 ### 第一次开会（10.19）
 
 - 确定设计及需求
