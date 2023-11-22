@@ -35,14 +35,14 @@ class Notice(models.Model):
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length=NAME_LEN)
+    name = models.CharField(max_length=NAME_LEN, unique=True) # 应该是独特的
     num = models.IntegerField()  # 被引用次数
 
 
 class Order(models.Model):
     time = models.DateTimeField(auto_now_add=True)
-    saler = models.ForeignKey(User, on_delete=models.CASCADE,related_name='saler_order')
-    buyer = models.ForeignKey(User, on_delete=models.CASCADE,related_name='buyer_order')
+    saler = models.ForeignKey(User, on_delete=models.CASCADE, related_name='saler_order')
+    buyer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='buyer_order')
 
 
 class Commodity(models.Model):
@@ -65,3 +65,6 @@ class Avator(models.Model):
     # todo 设置default头像
 
 
+class Tag_Post(models.Model):
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)

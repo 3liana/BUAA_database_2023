@@ -55,7 +55,7 @@ class CancelOrder(APIView):
         return Response({'value': value})
 
 
-class getOrder(APIView):
+class GetOrder(APIView):
     def get(self, req: Request):
         data = req.data
         order_id = data['order_id']
