@@ -65,7 +65,7 @@ class GetPost(APIView):
         return Response({
             'title': post.title,
             'content': post.content,
-            'user': post.user,
+            'username': post.user.username,
             'date': post.time
         })
 
