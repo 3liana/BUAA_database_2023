@@ -33,12 +33,16 @@ import Dialog from '@/components/Dialog.vue';
 import { result } from 'lodash';
 import {ref, reactive, getCurrentInstance} from "vue";
 import { useRoute, useRouter } from 'vue-router';
+import { setAvatar , getAvatar} from "../api/postFunc";
+
 const { proxy } = getCurrentInstance();
 const route = useRoute();
 const router = useRouter();
 
 const formData = ref({});
 const formDataRef = ref();
+
+const cookieUserInfo = proxy.VueCookies.get("userInfo");
 
 const show = (data)=> {
     formData.value = Object.assign({}, data);
@@ -68,12 +72,16 @@ const submitForm= async ()=> {
         dialogConfig.value.show = false;
         return;
     }
+    //formData.value.name:->photo_name
+    //p
     let params = {
-        user: formData.value.name,
+        username: cookieUserInfo.name,
         photo: formData.value.avatar,
     };
+    //console.log(params.username);
+    //console.log(params.photo);
     var value;
-    value = setAvator(params);
+    value = setAvatar(params);
     value.then((result)=>{
         console.log(result);
         //value? 
@@ -83,8 +91,8 @@ const submitForm= async ()=> {
     })
     
     dialogConfig.value.show = false;
-    const cookieUserInfo = proxy.VueCookies.get("userInfo");
-    delete cookieUserInfo.avatar;
+    //更改photo
+    cookieUserInfo.photo=params.photo;
     proxy.VueCookies.set("userInfo", cookieUserInfo, 0);
     emit("updateAvatar");
 };

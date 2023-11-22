@@ -1,3 +1,4 @@
+
 import { post, get} from './api';
 export function inviteUserIntoChatGroup(params){
 	var data=new FormData();
@@ -17,19 +18,39 @@ export function userLogin(params) {
 	return post('/api/login/',data);
 }
 
-export function setAvator(user, photo) {
+export function setAvatar(params) {
 	var data = new FormData();
-	data.append("user", user);
-	data.append("photo", photo);
+	data.append("username", params.username);
+	data.append("photo", params.username);
 	return post('/api/setAvatar', data);
 }
 
-export function getAvator(user) {
-	return get('/api/getAvatar/'+`${user}`);
+export function getAvatar(username) {
+	return get('/api/getAvatar/'+`${username}`);
 }
 
 export function logout() {
 	var data = new FormData();
 	return post('/api/logout', data);
+}
+
+export function createPost(params) {
+	var data = new FormData();
+	data.append("username", params.username);
+	console.log(params.username);
+	data.append("title", params.title);
+	data.append("content", params.content);
+	
+	return post('/api/createPost', data);
+}
+
+export function getPost(post_id) {
+	var data = new FormData();
+	data.append("post_id" , post_id);
+	return post('/api/getPost', data);
+}
+
+export function getAllPosts() {
+	return post('/api/getAllPosts', new FormData());
 }
 

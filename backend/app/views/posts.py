@@ -9,12 +9,12 @@ class CreatePost(APIView):
     def post(self, req: Request):
         data = req.data
         username = data['username']
-        user = User.objects.get(username=username)
         title = data['title']
         content = data['content']
         post_id = -1
         value = -1
         try:
+            user = User.objects.get(username=username)
             post = Post.objects.create(
                 title=title,
                 content=content,
@@ -29,8 +29,9 @@ class CreatePost(APIView):
             value = 1
         return Response({'value': value, 'post_id': post_id})
 
+
 class DeletePost(APIView):
-    def post(self,req:Request):
+    def post(self, req: Request):
         post_id = req.data['post_id']
         value = 1
         try:
@@ -39,7 +40,6 @@ class DeletePost(APIView):
         except Exception as e:
             print(e)
         return Response(value)
-
 
 
 class GetPostCommodities(APIView):
@@ -67,4 +67,21 @@ class GetPost(APIView):
             'content': post.content,
             'user': post.user,
             'date': post.time
+        })
+
+
+class GetAllPosts(APIView):
+    def post(self, req: Request):
+        return_data = []
+        allPost = Post.objects.all()
+        for post in allPost:
+            return_data.append({
+                'post_id': post.id,
+                'title': post.title,
+                'content': post.content,
+                'user': post.user.id,
+                'date': post.time
+            })
+        return Response({
+            "allposts": return_data
         })

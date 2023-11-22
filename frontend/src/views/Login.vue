@@ -203,7 +203,7 @@
             //登录
             var value;
             if (opType.value==1) {
-                console.log("login");
+                //console.log("login");
                 //console.log(params);
                 let cookieLoginInfo = proxy.VueCookies.get("loginInfo");
                 let cookiePassword = cookieLoginInfo==null ? null : cookieLoginInfo.password;
@@ -217,10 +217,10 @@
                     if (result.value == 0) {
                         
                     } else if (result.value == 1) {
-                        alert('用户名不存在')
+                        alert('用户名不存在');
                         return;
                     } else if (result.value == 2) {
-                        alert('密码错误')
+                        alert('密码错误');
                         return;
                     } 
                     //result.type -> 用户类型
@@ -229,17 +229,17 @@
                 //console.log(params);
                 value = inviteUserIntoChatGroup(params);
                 value.then((result) => {
-                    console.log(result)
+                    console.log(result);
                     if (result.value == 0) {
 
                     } else if (result.value == 1) {
-                        alert('不满足数据约束条件')
+                        alert('不满足数据约束条件');
                         return;
                     } else if (result.value == 2) {
-                        alert('此微信号已被注册')
+                        alert('此微信号已被注册');
                         return;
                     } else if (result.value == 3) {
-                        alert('此用户名已被注册')
+                        alert('此用户名已被注册');
                         return;
                     }
                 })
@@ -263,7 +263,7 @@
             if(opType.value==0) {
                 proxy.Message.success("注册成功，请登录");
                 showPanel(1);
-            } else if (opType.value==1&&value.value==0) {
+            } else if (opType.value==1) {
                 if (params.rememberMe) {
                     //定义对象，将信息记录到cookie
                     const loginInfo = {
@@ -278,9 +278,12 @@
                 proxy.Message.success("登录成功");
                 //存储Cookie
                 //登录成功
-                proxy.VueCookies.set("userInfo", result.data, 0);
+                proxy.VueCookies.set("userInfo", formData.value, 0);
+                console.log(proxy.VueCookies.get("userInfo").name);
                 //重定向到原始页面
+                
                 const redirectUrl = route.query.redirectUrl||"/";
+                //console.log(redirectUrl);
                 router.push(redirectUrl);
             } 
         });

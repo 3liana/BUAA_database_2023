@@ -32,8 +32,8 @@ class Register(APIView):
     # 普通用户
     def post(self, request):
         data = request.data
-        print("register data:")
-        print(request.data)
+        # print("register data:")
+        # print(request.data)
         name = str(data.get('name'))
         password = str(data.get('password'))
         phone = str(data.get('phone'))
@@ -65,8 +65,15 @@ class Login(APIView):
         password = data.get('password')
         value = 0
         type = -1
+        debug = True
+        if(debug):
+            all_user = User.objects.all()
+            for user in all_user:
+                print(user.username)
         try:
             item = User.objects.get(username=name)
+            print("user")
+            print(item)
             type = 0  # 普通用户
         except User.DoesNotExist:
             try:
@@ -167,4 +174,70 @@ class MyOrdersAsBuyer(APIView):
         return Response({
             'value': value,
             'order_ids': return_data,
+        })
+
+
+class GetPassword(APIView):
+    def post(self, req: Request):
+        username = req.data['username']
+        value = -1
+        password = ''
+        try:
+            user = User.objects.get(username=username)
+            password = user.password
+            value = 0
+        except User.DoesNotExist:
+            try:
+                admin = Administrator.objects.get(username=username)
+                password = admin.password
+                value = 0
+            except Administrator.DoesNotExist:
+                value = 1
+        return Response({
+            'value': value,
+            'password': password,
+        })
+
+
+class ChangePassword(APIView):
+    def post(self, req: Request):
+        username = req.data['username']
+        new_password = req.data['new_password']
+        value = -1
+        try:
+            user = User.objects.get(username=username)
+            user.password = new_password
+            user.save()
+            value = 0
+        except User.DoesNotExist:
+            try:
+                admin = Administrator.objects.get(username=username)
+                admin.password = new_password
+                admin.save()
+                value = 0
+            except Administrator.DoesNotExist:
+                value = 1
+        return ({
+            'value': value,
+        })
+
+
+class GetUserInfo(APIView):
+    def post(self, req: Request):
+        username = req.data['username']
+        phone = ''
+        wechat = ''
+        value = -1
+        try:
+            user = User.objects.get(username=username)
+            phone = user.phone
+            wechat = user.wechat
+            value = 0
+        except Exception as e:
+            print(e)
+            value = 1
+        return Response({
+            'value': value,
+            'phone': phone,
+            'wechat': wechat,
         })
