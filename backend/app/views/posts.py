@@ -79,7 +79,7 @@ class GetAllPosts(APIView):
                 'post_id': post.id,
                 'title': post.title,
                 'content': post.content,
-                'user': post.user.id,
+                'username': post.user.username,
                 'date': post.time
             })
         return Response({
