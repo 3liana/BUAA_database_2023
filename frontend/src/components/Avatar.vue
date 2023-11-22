@@ -2,9 +2,9 @@
     <span class="avatar" :style="{ width: width + 'px', height: width + 'px'}">
         <img 
         :src="
-        avatar && avatar!= '' ? avatar : '/api/getAvatar/'+`${name}`+`?${timestamp}`
+        avatar && avatar!= '' ? avatar : '/api/getAvatar/'+`${username}`+`?${timestamp}`
         "
-        v-if="name"
+        v-if="username"
     >
     </span>
 </template>
@@ -15,7 +15,7 @@ import { getCurrentInstance } from 'vue';
 const { proxy } = getCurrentInstance();
 
 const props = defineProps({
-    name: {
+    username: {
         type: String,
     },
     avatar: {

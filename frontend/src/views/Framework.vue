@@ -102,6 +102,8 @@ import { useRouter, useRoute } from "vue-router";
 import UpdateAvatar from "./UpdateAvatar.vue";
 import Avatar from "../components/Avatar.vue";
 import Dialog from "../components/Dialog.vue";
+
+
 const { proxy } = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
@@ -121,7 +123,7 @@ const menus = [
     children: [
       {
         icon: "all",
-        name: "全部",
+        name: "主页",
         category: "all",
         path: "/main/all",
       },
@@ -153,7 +155,7 @@ const menus = [
     allShow: true,
     children: [
       {
-        name: "订单交易记录",
+        name: "我发布的订单",
         path: "/myshare",
       },
     ],
@@ -161,14 +163,14 @@ const menus = [
   {
     path: "/finished",
     icon: "del",
-    name: "已完成的订单",
+    name: "我购买的订单",
     menuCode: "finished",
     tips: "为你保存10天内完成的订单",
     allShow: true,
     children: [
       {
-        name: "完成的订单",
-        path: "/finished",
+        name: "我购买的订单",
+        path: "/finished/buyer",
       },
     ],
   },
@@ -203,6 +205,7 @@ const jump = (data)=> {
     //path为空或就是当前页面
     return;
   }
+  console.log(proxy.VueCookies.get("userInfo").name);
   router.push(data.path);
 };
 
@@ -212,7 +215,7 @@ const setMenu=(menuCode, path)=> {
   });
   currentMenu.value = menu;
   currentPath.value = path;
-}
+};
 
 //监听路由
 watch(
@@ -234,7 +237,7 @@ const updateAvatar = ()=> {
 //回调函数，更新显示的头像
 const reloadAvatar = ()=>{
   userInfo.value = proxy.VueCookies.get("userInfo");
-  timestamp.value = new Data().getTime();
+  //timestamp.value = (new Data()).getTime();
 };
 
 //退出登录
@@ -246,7 +249,7 @@ const logout = () => {
           alert('登出错误');
           return;
         }
-    })
+    });
     proxy.VueCookies.remove("userInfo");
     router.push("/login");
   });
