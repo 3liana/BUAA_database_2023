@@ -42,6 +42,23 @@ class DeletePost(APIView):
         return Response(value)
 
 
+class GetUser(APIView):
+    def post(self, req: Request):
+        post_id = req.data['post_id']
+        username = ''
+        value = -1
+        try:
+            username = Post.objects.get(id=post_id).user.username
+            value = 0
+        except Exception as e:
+            print(e)
+            value = -1
+        return Response({
+            'value': value,
+            'username': username
+        })
+
+
 class GetPostCommodities(APIView):
     def get(self, req: Request):
         post_id = req.data['post_id']
@@ -84,4 +101,89 @@ class GetAllPosts(APIView):
             })
         return Response({
             "allposts": return_data
+        })
+
+
+class GetPostTags(APIView):
+    def post(self, req: Request):
+        post_id = req.data['post_id']
+        tag_ids = []
+        value = -1
+        try:
+            tags = Tag_Post.objects.filter(post__id=post_id)
+            for tag in tags:
+                tag_ids.append(tag.id)
+            value = 0
+        except Exception as e:
+            print(e)
+            value = 1
+        return Response({
+            'value': value,
+            'tag_ids': tag_ids,
+        })
+
+
+class DeleteTagToPost(APIView):
+    def post(self, req: Request):
+        data = req.data
+        post_id = data['post_id']
+        tag_id = data['tag_id']
+        value = -1
+        try:
+            tag = Tag.objects.get(tag_id=tag_id)
+            Tag_Post.objects.filter(post__id=post_id, tag__id=tag_id).delete()
+            tag.num = tag.num - 1
+            tag.save()
+            value = 0
+        except Exception as e:
+            print(e)
+            value = 1
+        return Response({
+            'value': value
+        })
+
+
+class ChangePost(APIView):
+    def post(self, req: Request):
+        data = req.data
+        post_id = data['post_id']
+        title = data['title']
+        content = data['content']
+        value = -1
+        try:
+            post = Post.objects.get(id=post_id)
+            if title != '':
+                post.title = title
+            if content != '':
+                post.content = content
+            post.save()
+            value = 0
+        except Exception as e:
+            print(e)
+            value = -1
+        return Response({
+            'value': value
+        })
+
+
+class AddTagToPost(APIView):
+    def post(self, req: Request):
+        data = req.data
+        post_id = data['post_id']
+        tag_id = data['tag_id']
+        value = -1
+        try:
+            tag = Tag.objects.get(id=tag_id)
+            Tag_Post.objects.create(
+                post=Post.objects.get(id=post_id),
+                tag=tag,
+            )
+            tag.num = tag.num + 1
+            tag.save()
+            value = 0
+        except Exception as e:
+            print(e)
+            value = 1
+        return Response({
+            'value': value
         })

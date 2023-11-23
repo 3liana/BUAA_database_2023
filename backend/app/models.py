@@ -13,6 +13,7 @@ class User(models.Model):
     password = models.CharField(max_length=PASSWD_LEN)
     phone = models.CharField(max_length=PHONE_LEN, blank=True, null=True)  # 可为空
     wechat = models.CharField(max_length=WECHAT_LEN)  # 一个wechat只能注册一个账号，防止恶意注册
+    isBaned = models.BooleanField(default=False)
 
 
 class Administrator(models.Model):
@@ -21,7 +22,7 @@ class Administrator(models.Model):
 
 
 class Post(models.Model):
-    time = models.DateTimeField(auto_now_add=True)
+    time = models.DateTimeField(auto_now=True)
     title = models.CharField(max_length=TITLE_LEN)
     content = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -35,7 +36,7 @@ class Notice(models.Model):
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length=NAME_LEN, unique=True) # 应该是独特的
+    name = models.CharField(max_length=NAME_LEN, unique=True)  # 应该是独特的
     num = models.IntegerField()  # 被引用次数
 
 
@@ -65,6 +66,7 @@ class Avator(models.Model):
     # todo 设置default头像
 
 
+# tag_post关系
 class Tag_Post(models.Model):
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
