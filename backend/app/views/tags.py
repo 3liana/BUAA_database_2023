@@ -26,3 +26,32 @@ class CreateTag(APIView):
             'value': value,
             'tag_id': tag_id
         })
+
+
+class AllTags(APIView):
+    def get(self):
+        all_tags = Tag.objects.all()
+        return_data = []
+        for tag in all_tags:
+            return_data.append({
+                'tag_id':tag.id,
+                'name': tag.name,
+                'num': tag.num,
+            })
+        return Response({
+            'all_tags': return_data
+        })
+
+class DeleteTag(APIView):
+    def post(self,req:Request):
+        tag_id = req.data['tag_id']
+        value = -1
+        try:
+            Tag.objects.filter(id=tag_id).delete()
+            value = 0
+        except Exception as e:
+            print(e)
+            value = 1
+        return Response({
+            'value':value
+        })

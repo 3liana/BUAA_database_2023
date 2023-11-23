@@ -75,9 +75,12 @@ class GetOrder(APIView):
             value = 1
             print(e)
         return ({
-            'value':value,
+            'value': value,
             'time': order.time.isoformat(),
             'saler_id': saler_id,
             'buyer_id': buyer_id,
             'commodity_id': commodity_id,
         })
+
+
+

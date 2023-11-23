@@ -27,3 +27,39 @@ class CreateNotice(APIView):
             print(e)
             value = 1
         return Response({'value': value, 'notice_id': notice_id})
+
+
+class AllNotice(APIView):
+    def post(self):
+        return_data = []
+        try:
+            notices = Notice.objects.all()
+            for notice in notices:
+                return_data.append({
+                    'time': notice.time,
+                    'title': notice.title,
+                    'content': notice.content,
+                    'username': notice.admin.username,
+                })
+        except Exception as e:
+            print(e)
+        return Response({
+            'return_data': return_data
+        })
+
+
+# class ChangeNotice(APIView):
+#     def post(self,req:Request):
+#         notice_id = req.data['notice_id']
+class DeleteNotice(APIView):
+    def post(self, req: Request):
+        notice_id = req.data['notice_id']
+        try:
+            Notice.objects.filter(id=notice_id).delete()
+            value = 0
+        except Exception as e:
+            print(e)
+            value = -1
+        return Response({
+            'value': value
+        })

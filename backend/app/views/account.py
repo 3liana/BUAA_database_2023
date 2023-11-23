@@ -66,7 +66,7 @@ class Login(APIView):
         value = 0
         type = -1
         debug = True
-        if(debug):
+        if (debug):
             all_user = User.objects.all()
             for user in all_user:
                 print(user.username)
@@ -89,7 +89,10 @@ class Login(APIView):
                 # 成功登录
                 request.session['name'] = name
                 request.session['type'] = type
-        return Response({'value': value, 'type': type})
+        return Response({
+            'value': value,
+            'type': type,
+        })
 
 
 class SetAvator(APIView):
@@ -240,4 +243,42 @@ class GetUserInfo(APIView):
             'value': value,
             'phone': phone,
             'wechat': wechat,
+        })
+
+
+class BanAUser(APIView):
+    def post(self, req: Request):
+        username = req.data['username']
+        value = -1
+        try:
+            user = User.objects.get(username=username)
+            user.isBaned = True
+            user.save()
+            value = 0
+        except Exception as e:
+            print(e)
+            value = 1
+        return Response({
+            'value': value
+        })
+
+
+class CheckBan(APIView):
+    def post(self,req:Request):
+        username = req.data['username']
+        value = -1
+        isBaned = -1
+        try:
+            user = User.objects.get(username=username)
+            if user.isBaned:
+                isBaned = 0
+            else:
+                isBaned = 1
+            value = 0
+        except Exception as e:
+            print(e)
+            value = 1
+        return Response({
+            'value': value,
+            'isBaned':isBaned,
         })
