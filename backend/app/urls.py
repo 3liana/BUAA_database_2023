@@ -47,7 +47,7 @@ urlpatterns = [
                   path('addCommodityPicture', commodities.AddCommodityPicture.as_view()),
                   path('checkIfOrdered', commodities.CheckIfOrdered.as_view()),
                   # 关于订单的功能
-                  path('createOder', orders.CreateOder.as_view()),
+                  path('createOrder', orders.CreateOrder.as_view()),
                   path('cancelOrder', orders.CancelOrder.as_view()),
                   path('getOrder', orders.GetOrder.as_view()),
                   # 关于标签的功能

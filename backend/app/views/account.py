@@ -119,7 +119,7 @@ class SetAvator(APIView):
 
 
 class GetAvator(APIView):
-    def get(self, req: Request):
+    def post(self, req: Request):
         username = req.data['username']
         try:
             user = User.objects.get(username=username)
@@ -135,7 +135,7 @@ class GetAvator(APIView):
 
 
 class MyPosts(APIView):
-    def get(self, req: Request):
+    def post(self, req: Request):
         username = req.data['username']
         # 感觉不用try 只有登录的user才能使用这个功能 所以一定能查找到user
         user = User.objects.get(username=username)
@@ -151,7 +151,7 @@ class MyPosts(APIView):
 
 
 class MyOrdersAsSaler(APIView):
-    def get(self, req: Request):
+    def post(self, req: Request):
         username = req.data['username']
         user = User.objects.get(username=username)
         orders = Order.objects.filter(saler=user)
@@ -166,7 +166,7 @@ class MyOrdersAsSaler(APIView):
 
 
 class MyOrdersAsBuyer(APIView):
-    def get(self, req: Request):
+    def post(self, req: Request):
         username = req.data['username']
         user = User.objects.get(username=username)
         orders = Order.objects.filter(buyer=user)

@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from app.models import *
 
 
-class CreateOder(APIView):
+class CreateOrder(APIView):
     def post(self, req: Request):
         data = req.data
         buyer_name = data['username']
@@ -56,7 +56,7 @@ class CancelOrder(APIView):
 
 
 class GetOrder(APIView):
-    def get(self, req: Request):
+    def post(self, req: Request):
         data = req.data
         order_id = data['order_id']
         value = 0

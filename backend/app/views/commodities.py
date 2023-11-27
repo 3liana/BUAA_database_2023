@@ -42,7 +42,7 @@ class CreateCommodity(APIView):
 
 
 class GetCommodityPictures(APIView):
-    def get(self, req: Request):
+    def post(self, req: Request):
         commodity_id = req.data['commodity_id']
         return_data = []
         commodity = Commodity.objects.get(id=commodity_id)
