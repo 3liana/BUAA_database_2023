@@ -60,7 +60,7 @@ class GetUser(APIView):
 
 
 class GetPostCommodities(APIView):
-    def get(self, req: Request):
+    def post(self, req: Request):
         post_id = req.data['post_id']
         post = Post.objects.get(id=post_id)
         return_data = []
@@ -76,7 +76,7 @@ class GetPostCommodities(APIView):
 
 
 class GetPost(APIView):
-    def get(self, req: Request):
+    def post(self, req: Request):
         post_id = req.data['post_id']
         post = Post.objects.get(id=post_id)  # 根据主键查找
         return Response({
