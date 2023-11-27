@@ -29,7 +29,7 @@ class CreateTag(APIView):
 
 
 class AllTags(APIView):
-    def post(self):
+    def post(self, req: Request):
         all_tags = Tag.objects.all()
         return_data = []
         for tag in all_tags:
