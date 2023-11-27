@@ -34,7 +34,7 @@ class AllTags(APIView):
         return_data = []
         for tag in all_tags:
             return_data.append({
-                'tag_id':tag.id,
+                'tag_id': tag.id,
                 'name': tag.name,
                 'num': tag.num,
             })
@@ -42,8 +42,9 @@ class AllTags(APIView):
             'all_tags': return_data
         })
 
+
 class DeleteTag(APIView):
-    def post(self,req:Request):
+    def post(self, req: Request):
         tag_id = req.data['tag_id']
         value = -1
         try:
@@ -53,5 +54,26 @@ class DeleteTag(APIView):
             print(e)
             value = 1
         return Response({
-            'value':value
+            'value': value
+        })
+
+
+class GetTagDetail(APIView):
+    def post(self, req: Request):
+        tag_id = req.data['tag_id']
+        value = -1
+        name = ''
+        num = 0
+        try:
+            tag = Tag.objects.get(id=tag_id)
+            value = 0
+            name = tag.name
+            num = tag.num
+        except Exception as e:
+            print(e)
+            value = 1
+        return Response({
+            'value': value,
+            'name': name,
+            'num': num,
         })
