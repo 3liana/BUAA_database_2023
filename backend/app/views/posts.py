@@ -85,6 +85,19 @@ class GetPost(APIView):
             'username': post.user.username,
             'date': post.time
         })
+    def get(self, req: Request):
+        post_id = req.query_params.get('post_id')
+        if not post_id:
+            return Response({"error": "No post_id provided"}, status=400)
+
+        post = Post.objects.get(id=post_id)  # 根据主键查找
+        return Response({
+            'title': post.title,
+            'content': post.content,
+            'username': post.user.username,
+            'date': post.time
+        })
+
 
 
 class GetAllPosts(APIView):
