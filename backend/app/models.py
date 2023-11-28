@@ -62,8 +62,8 @@ class Photo(models.Model):
 
 class Avator(models.Model):
     file = models.ImageField(upload_to='avator/')
-    user = models.ForeignKey(Commodity, on_delete=models.CASCADE, null=True)
-    # todo 设置default头像
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    # todo 设置default头像（可以让前端设置 如果没有头像就展示一个default照片
 
 
 # tag_post关系
