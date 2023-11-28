@@ -72,9 +72,9 @@ class AddCommodityPicture(APIView):
             value = 1
             print(e)
         return Response({
-                'value': value,
-                'photo_id': pic_id,
-            })
+            'value': value,
+            'photo_id': pic_id,
+        })
 
 
 class CheckIfOrdered(APIView):
@@ -82,6 +82,61 @@ class CheckIfOrdered(APIView):
         commodity_id = req.data['commodity_id']
         c0 = Commodity.objects.get(id=commodity_id)
         if c0.order is None:
-            return Response(0)
+            return Response({
+                'value': 0
+            })
         else:
-            return Response(1)
+            return Response({
+                'value': 1
+            })
+
+
+class BelongToPost(APIView):
+    def post(self, req: Request):
+        data = req.data
+        com_id = data['commodity_id']
+        value = -1
+        post_id = -1
+        try:
+            commodity = Commodity.objects.get(id=com_id)
+            post_id = commodity.post.id
+            value = 0
+        except Exception as e:
+            print(e)
+            value = 1
+        return Response({
+            'value': value,
+            'post_id': post_id
+        })
+
+
+class GetCommodityDetail(APIView):
+    def post(self, req: Request):
+        data = req.data
+        com_id = data['commodity_id']
+        value = -1
+        name = ''
+        dc = ''
+        price = -1
+        post_id = -1
+        order_id = -1
+        try:
+            commodity = Commodity.objects.get(id=com_id)
+            name = commodity.name
+            dc = commodity.description
+            price = commodity.price
+            post_id = commodity.post.id
+            if commodity.order:
+                order_id = commodity.order.id
+            value = 0
+        except Exception as e:
+            print(e)
+            value = 1
+        return Response({
+            'value': value,
+            'name': name,
+            'dc': dc,
+            'price': price,
+            'post_id': post_id,
+            'order_id': order_id
+        })
