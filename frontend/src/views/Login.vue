@@ -211,35 +211,50 @@
                     //输入的密码不是从cookie中取的
                     params.password = md5(params.password);
                 }*/
+                console.log(params);
                 value = userLogin(params);
                 value.then((result) => {
-                    console.log(result)
+                    console.log(result);
                     if (result.value == 0) {
-                        
+                        proxy.Message.success("登录成功");
+                        //存储Cookie
+                        //登录成功
+                        //type:0 普通用户， 1 管理员 
+                       
+                        formData.value.usertype = result.type;
+                        console.log(formData.value.usertype);
+                        proxy.VueCookies.set("userInfo", formData.value, 0);
+                        console.log(proxy.VueCookies.get("userInfo").name);
+                        //重定向到原始页面
+                
+                         const redirectUrl = route.query.redirectUrl||"/";
+                        //console.log(redirectUrl);
+                        router.push(redirectUrl);
                     } else if (result.value == 1) {
-                        alert('用户名不存在');
+                        proxy.Message.error("用户名不存在");
                         return;
                     } else if (result.value == 2) {
-                        alert('密码错误');
+                        proxy.Message.error("密码错误");
                         return;
                     } 
                     //result.type -> 用户类型
                 })
-            } else if (opType.value == 0) {
+            } else if (opType.value == 0) { 
                 //console.log(params);
                 value = inviteUserIntoChatGroup(params);
                 value.then((result) => {
                     console.log(result);
                     if (result.value == 0) {
-
+                        proxy.Message.success("注册成功，请登录");
+                        showPanel(1);
                     } else if (result.value == 1) {
-                        alert('不满足数据约束条件');
+                        proxy.Message.error('不满足数据约束条件');
                         return;
                     } else if (result.value == 2) {
-                        alert('此微信号已被注册');
+                        proxy.Message.error('此微信号已被注册');
                         return;
                     } else if (result.value == 3) {
-                        alert('此用户名已被注册');
+                        proxy.Message.error('此用户名已被注册');
                         return;
                     }
                 })
@@ -261,30 +276,9 @@
 
             //注册返回
             if(opType.value==0) {
-                proxy.Message.success("注册成功，请登录");
-                showPanel(1);
-            } else if (opType.value==1) {
-                if (params.rememberMe) {
-                    //定义对象，将信息记录到cookie
-                    const loginInfo = {
-                        password:params.password,
-                        rememberMe:params.rememberMe
-                    };  
-                    //保留七天信息
-                    proxy.VueCookies.set("loginInfo", loginInfo, "7d");
-                } else {
-                    proxy.VueCookies.remove("loginInfo");
-                }
-                proxy.Message.success("登录成功");
-                //存储Cookie
-                //登录成功
-                proxy.VueCookies.set("userInfo", formData.value, 0);
-                console.log(proxy.VueCookies.get("userInfo").name);
-                //重定向到原始页面
                 
-                const redirectUrl = route.query.redirectUrl||"/";
-                //console.log(redirectUrl);
-                router.push(redirectUrl);
+            } else if (opType.value==1) {
+                
             } 
         });
        

@@ -19,12 +19,14 @@
                     <span class="iconfont icon-transfer"></span>
                 </template>
                 <template #default>
-                    暂时是上传区
+                  
                 </template>
             </el-popover>
 
             <el-dropdown>
                 <div class="user-info">
+                  <!--返回上一页面-->
+                  
                     <div class="avatar">
                       <Avatar 
                       :name="userInfo.name" 
@@ -35,16 +37,62 @@
                       ></Avatar>
                     </div>
                     <span class="nick-name" v-if="userInfo">{{ userInfo.name }}</span>
+                    
                 </div>
                 <template #dropdown>
                     <el-dropdown-menu>
                         <el-dropdown-item @click="updateAvatar">修改头像</el-dropdown-item>
-                        <el-dropdown-item>修改密码</el-dropdown-item>
+                        <el-dropdown-item @click="changeWord">修改密码</el-dropdown-item>
+                        
                         <el-dropdown-item @click="logout">退出</el-dropdown-item>
                     </el-dropdown-menu>
                     
                 </template>
             </el-dropdown>
+                        <Dialog
+                          :show="dialogConfig1.show"
+                          :title="dialogConfig1.title"
+                          :buttons="dialogConfig1.buttons"
+                          width="700px"
+                          :showCancel="false"
+                          @close="dialogConfig1.show = false"
+                          >
+                          <el-form
+                          :model="formData1"
+                          :rules="rules"
+                          ref="formData1Ref"
+                          label-width="80px"
+                          @submit.pervent
+                          >
+                
+                          <el-form-item prop="password">
+                            <el-input
+                              type="password"
+                              size="large"
+                              placeholder="请输入旧密码"
+                              v-model.trim="formData1.repassword"
+                              show-password
+                              maxLength="20">
+                            <template #prefix>
+                            <span class="iconfont icon-password"></span>
+                            </template>
+                            </el-input>
+                          </el-form-item>
+                          <el-form-item prop="password">
+                            <el-input
+                              type="password"
+                              size="large"
+                              placeholder="请输入新密码"
+                              v-model.trim="formData1.password"
+                              show-password
+                              maxLength="20">
+                            <template #prefix>
+                            <span class="iconfont icon-password"></span>
+                            </template>
+                            </el-input>
+                          </el-form-item>
+                          </el-form>
+                          </Dialog>
             </div>
         </div>
         <div class="body">
@@ -73,6 +121,7 @@
                   </div>
                 </div>
             </div>
+            
             <div class="body-content">
               <router-view v-slot="{ Component}">
                 <component :is="Component">
@@ -102,6 +151,7 @@ import { useRouter, useRoute } from "vue-router";
 import UpdateAvatar from "./UpdateAvatar.vue";
 import Avatar from "../components/Avatar.vue";
 import Dialog from "../components/Dialog.vue";
+import {changePassWord} from "../api/postFunc";
 
 
 const { proxy } = getCurrentInstance();
@@ -118,33 +168,16 @@ const menus = [
     icon: "cloude",
     name: "首页",
     menuCode: "main",
-    path: "/main/all",
+    path: "/main/post",
     allShow: true,
     children: [
       {
         icon: "all",
-        name: "主页",
+        name: "广场",
         category: "all",
-        path: "/main/all",
+        path: "/main/post",
       },
-      {
-        icon: "music",
-        name: "公告栏",
-        category: "notice",
-        path: "/main/notice",
-      },
-      {
-        icon: "video",
-        name: "交易栏",
-        category: "deal",
-        path: "/main/deal",
-      },
-      {
-        icon: "more",
-        name: "其他",
-        category: "others",
-        path: "/main/others",
-      },
+      
     ],
   },
   {
@@ -154,10 +187,7 @@ const menus = [
     menuCode: "share",
     allShow: true,
     children: [
-      {
-        name: "我发布的订单",
-        path: "/myshare",
-      },
+      
     ],
   },
   {
@@ -205,8 +235,9 @@ const jump = (data)=> {
     //path为空或就是当前页面
     return;
   }
-  console.log(proxy.VueCookies.get("userInfo").name);
+  //console.log(proxy.VueCookies.get("userInfo").name);
   router.push(data.path);
+  
 };
 
 const setMenu=(menuCode, path)=> {
@@ -224,6 +255,7 @@ watch(
     if (newVal.meta.menuCode) {
       setMenu(newVal.meta.menuCode, newVal.path);
     }
+   
   },
   { immediate: true, deep: true }
 );
@@ -240,21 +272,59 @@ const reloadAvatar = ()=>{
   //timestamp.value = (new Data()).getTime();
 };
 
+const formData1 = ref({});
+
+const dialogConfig1 = reactive({
+        show: false,
+        title: "修改密码",
+        buttons: [
+        {
+        type: "primary",
+        text: "提交",
+        click: () => {
+            submitPost();
+          },
+        },
+        ],
+    });
+
+const changeWord = ()=>{
+    dialogConfig1.show = true;
+};
+
+const submitPost = ()=>{
+    var params = {
+      "username": proxy.VueCookies.get("userInfo").name,
+      "password": formData1.value.password,
+    };
+
+    if (proxy.VueCookies.get("userInfo").password != formData1.value.repassword) {
+      proxy.Message.error("输入旧密码不正确");
+    } else {
+      var data = changePassWord(params);
+      data.then((result)=>{
+        if (result.value == 0) {
+          proxy.Message.success("更改密码成功");
+          proxy.VueCookies.get("userInfo").password = params.password;
+        } else {
+          proxy.Message.error("更改密码失败");
+        }
+
+      })
+    }
+
+
+};
+
 //退出登录
 const logout = () => {
   proxy.Confirm(`你确定要退出吗`, async() => {
-    var value = logout();
-    value.then((result) => {
-        if (result.value != 0) {
-          alert('登出错误');
-          return;
-        }
-    });
     proxy.VueCookies.remove("userInfo");
     router.push("/login");
   });
 
 };
+
 
 </script>
 

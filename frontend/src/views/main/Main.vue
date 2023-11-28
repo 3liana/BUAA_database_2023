@@ -5,7 +5,7 @@
             type="primary"
             size="large"
             @click="showDialog">
-                发布商品帖子
+                发布帖子
             </el-button>
             <Dialog
                 :show="dialogConfig.show"
@@ -49,6 +49,14 @@
                         ></el-input>
                    </div>
                 </el-form-item>
+                
+                <el-form-item>
+                  <!--展示所有tag-->
+                  <div v-for="tag in tags">
+                    <button @click=""></button>
+                  </div>
+
+                </el-form-item>
                 </el-form-item>
                 </el-form>
             </Dialog>
@@ -56,19 +64,85 @@
       
       <!-- 展示所有帖子的内容 -->
       <div id="content" style="overflow:auto">
-        <div class="common-list" v-infinite-scroll="load" infinite-scroll-disabled="disabled">
+        <div class="common-list" >
           <div class="common-wrap" v-for="item in allPosts" :key="item.post_id">
             <div class="common-item">
               <div class="post-separator"></div>
               
-              <h3 class="post-title">标题: {{ item.title }}</h3>
+             <router-link :to="`/main/post/${item.post_id}`"
+              type="primary"
+              size="large"
+              class="post-title" 
+             >{{ item.title }}</router-link>
               <div class="post-content">
                 <p class="post-info">帖子编号: {{ item.post_id }}</p>
-                <p class="post-info">作者: {{ item.user }}</p>
+                <p class="post-info">作者: {{ item.username }}</p>
                 <p class="post-info">内容: {{ item.content }}</p>
-                <p class="post-info">发布于: {{ item.time }}</p>
+                <p class="post-info">发布于: {{ item.data }}</p>
+                
+              </div>
+            <div v-if="item.username == userMessage.username">
+              <el-button 
+              type="primary"
+              size="large"
+              @click="deleteP(item.post_id)">
+                删除帖子
+              </el-button>
+            <el-button 
+            type="primary"
+            size="large"
+            @click="showDialog1">
+                修改帖子
+            </el-button>
+            <Dialog
+                :show="dialogConfig1.show"
+                :title="dialogConfig1.title"
+                :buttons="dialogConfig1.buttons"
+                width="700px"
+                :showCancel="false"
+                @close="dialogConfig1.show = false"
+                >
+                <el-form
+                    :model="formData1"
+                    :rules="rules"
+                    ref="formDataRef"
+                    label-width="80px"
+                    @submit.pervent
+                >
+                <el-form-item>
+                <h2>修改帖子{{ formData1.post_id = item.post_id }}</h2>
+
+                <el-form-item label="title">
+                   <div class="modal-content">
+                        <el-input
+                        :rows="3"
+                        
+                        size="large"
+                        placeholder="请输入标题"
+                        v-model.trim="formData1.title"
+                        ></el-input>
+                   </div>
+                </el-form-item>
+                <el-form-item label="content">
+                    <div class="modal-content">
+                        <el-input
+                        maxlength="300"
+                        show-word-limit
+                        style="width: 250px"
+                        height="250px"
+                        :rows="20"
+                        
+                        placeholder="请输入内容"
+                        v-model.trim="formData1.content"
+                        ></el-input>
+                   </div>
+                </el-form-item>
+                </el-form-item>
+                </el-form>
+            </Dialog>
             </div>
           </div>
+            
           </div>
         </div>
       </div>
@@ -78,7 +152,7 @@
   <script setup>
     import {ref, reactive, getCurrentInstance, nextTick, onMounted } from "vue";
     import {useRouter, useRoute} from "vue-router";
-    import {createPost, getPost, getAllPosts} from '../../api/postFunc';
+    import {createPost, getPost, getAllPosts, deletePost, changePost, allTags} from '../../api/postFunc';
     import Dialog from '../../components/Dialog.vue';
     
 
@@ -88,28 +162,63 @@
     const route = useRoute();
 
     const formData = ref({});
+
+    const formData1 = ref({});
     //const formDataRef = ref();
 
     const postIdCache = ref({
         //post_id:, 
     });
 
+
     const allPosts = ref([
       {
         post_id: 1,
-        title: "test_title",
+        title: "qwp",
         content: "test_content",
         user: "test_user",
         data: "2023/11/22"
       },
+      {
+        post_id: 2,
+        title: "test_title2",
+        content: "test_content2",
+        user: "test_user2",
+        data: "2023/11/27"
+      },
+      {
+        post_id: 3,
+        title: "test_title3",
+        content: "test_content3",
+        user: "test_user3",
+        data: "2023/11/27"
+      },
     ]);
+
+    const tags = ref([
+      {
+        "tag_id" : 1,
+        "name" : "零食",
+        "num" : 2,
+      },
+      {
+        "tag_id" : 2,
+        "name" : "化妆品",
+        "num" : 3,
+      },
+      
+    ]);
+
+    const userMessage = ref({
+      "username":proxy.VueCookies.get("userInfo").name
+    });
   
     const savePostIdCache = ()=> {
       localStorage.setItem('postIdCache', JSON.stringify(postIdCache.value));
     };
 
     const addPostId = (postId) => {
-      postIdCache.value.push(postId);
+      postIdCache.push(postId);
       savePostIdCache();
     };
 
@@ -121,42 +230,28 @@
       }
     };
 
+    const initData = ()=>{
+        console.log("init!");
+        var value = getAllPosts();
+        value.then((result) => {
+            allPosts.value = result.allposts; 
+            console.log(allPosts.value[0].post_id);
+        })
+        
+        
+    };
+
+
     onMounted(() => {
+      //执行挂载后需要做的事情
       const cachedPostIds = localStorage.getItem('postIdCache');
       if (cachedPostIds) {
         postIdCache.value = JSON.parse(cachedPostIds);
       }
+      initData();
     });
 
-    onMounted(() => {
-      const initData = ()=>{
-        var value = getAllPosts();
-        value.then((result) => {
-            allPosts.value = result.data; 
-        })
-
-        
-      }
-
-    });
-
-    const getPostValue= (post_id) => {
-      var value = getPost(post_id);
-      value.then((result) => {
-            console.log(result.value);
-            if (result.value == 0) {
-               allPosts.value.push({
-                post_id: post_id,
-                title: value.title,
-                content: value.content,
-               });
-               
-            } else {
-                alert('fault in getPost');
-            }
-        });
-      return value;
-    };
+    
 
     const dialogConfig = reactive({
         show: false,
@@ -166,9 +261,24 @@
         type: "primary",
         text: "提交",
         click: () => {
-            submitPost();
+            submitPost(0);
             console.log("submit!");
             },
+        },
+        ],
+    });
+
+    const dialogConfig1 = reactive({
+        show: false,
+        title: "修改帖子",
+        buttons: [
+        {
+        type: "primary",
+        text: "提交",
+        click: () => {
+            submitPost(1);
+            
+          },
         },
         ],
     });
@@ -176,11 +286,16 @@
     const showDialog = ()=> {
         dialogConfig.show = true;
     };
+
+    const showDialog1 = ()=>{
+        dialogConfig1.show = true;
+    }
    
-    const submitPost = () => {
+    const submitPost = (type) => {
         let params = {};
+        if (type == 0) {
         Object.assign(params, formData.value);
-        params.username = proxy.VueCookies.get("userInfo").name;
+        params.username = userMessage.value.username;
         //console.log(params.content);
 	      console.log(params.title);
         var value = createPost(params);
@@ -189,38 +304,66 @@
             if (result.value == 0) {
               console.log(result.post_id);
               //存储post_id
-              addPostId(result.post_id);
+              //addPostId(result.post_id);
               proxy.Message.success("发布成功");
+              initData();
+              router.go();
             } else {
-              console.log("value error");
-                alert('发布错误');
-                return;
+              proxy.Message.error("发布错误");
+              return;
             }
         });
-
+      } else {
+        Object.assign(params, formData1.value);
+        console.log(params.post_id);
+        var value = changePost(params);
+        value.then((result)=>{
+          if (result.value == 0) {
+            proxy.Message.success("修改成功");
+            initData();
+            router.go();
+          } else{
+            proxy.Message.error("修改错误");
+          }
+          
+        });
+      }
+      
     };
 
-    onMounted(() => {
-      //执行挂载后需要做的事情
-
-
-    });
+    const deleteP = (post_id) => {
+        var data = deletePost(post_id);
+        data.then((result)=>{
+          if (result == 0) {
+            proxy.Message.success("删除帖子成功");
+            initData();
+            router.go();
+          } else {
+            proxy.Message.error("删除失败");
+          }
+        });
+      
+    }
     
  
   </script>
   
   <style>
   .post-title {
+    margin-bottom: 10px;
   font-size: 18px;
   font-weight: bold;
 }
 
 .post-content {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  padding: 10px;
+  /* Add styles for the content section */
+  /* For example: */
   margin-top: 10px;
-  border-radius: 4px;
+  font-size: larger;
+  font-weight: bold;
+  text-align: left;
 }
+
   .post-separator {
   height: 1px;
   background-color: #ccc;
@@ -229,6 +372,8 @@
 
   .post-info {
   margin-bottom: 5px;
+  font-size: 14px;
+  font-weight: bold;
   }
 
   .modal {
