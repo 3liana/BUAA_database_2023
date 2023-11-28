@@ -60,15 +60,14 @@ class GetOrder(APIView):
         data = req.data
         order_id = data['order_id']
         value = 0
-        saler_id = -1
-        buyer_id = -1
+        saler_name = ''
+        buyer_name = ''
         commodity_id = -1
         try:
-            item = Order.objects.get(id=order_id)
-            saler = item.saler
-            saler_id = saler.id
-            buyer_id = item.buyer.id
             order = Order.objects.get(id=order_id)
+            saler = order.saler
+            saler_name = saler.username
+            buyer_name = order.buyer.username
             commodity = Commodity.objects.get(order=order)
             commodity_id = commodity.id
         except Exception as e:
@@ -77,8 +76,8 @@ class GetOrder(APIView):
         return ({
             'value': value,
             'time': order.time.isoformat(),
-            'saler_id': saler_id,
-            'buyer_id': buyer_id,
+            'saler_name': saler_name,
+            'buyer_name': buyer_name,
             'commodity_id': commodity_id,
         })
 
