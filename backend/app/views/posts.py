@@ -143,7 +143,7 @@ class DeleteTagToPost(APIView):
         tag_id = data['tag_id']
         value = -1
         try:
-            tag = Tag.objects.get(tag_id=tag_id)
+            tag = Tag.objects.get(id=tag_id)
             Tag_Post.objects.filter(post__id=post_id, tag__id=tag_id).delete()
             tag.num = tag.num - 1
             tag.save()
@@ -185,18 +185,26 @@ class AddTagToPost(APIView):
         post_id = data['post_id']
         tag_id = data['tag_id']
         value = -1
+        find = True
         try:
-            tag = Tag.objects.get(id=tag_id)
-            Tag_Post.objects.create(
-                post=Post.objects.get(id=post_id),
-                tag=tag,
-            )
-            tag.num = tag.num + 1
-            tag.save()
-            value = 0
-        except Exception as e:
-            print(e)
-            value = 1
+            item = Tag_Post.objects.get(post__id=post_id, tag__id=tag_id)
+        except Tag_Post.DoesNotExist:
+            find = False
+        if(not find):
+            try:
+                tag = Tag.objects.get(id=tag_id)
+                Tag_Post.objects.create(
+                    post=Post.objects.get(id=post_id),
+                    tag=tag,
+                )
+                tag.num = tag.num + 1
+                tag.save()
+                value = 0
+            except Exception as e:
+                print(e)
+                value = 1
+        else:
+            value = 2
         return Response({
             'value': value
         })

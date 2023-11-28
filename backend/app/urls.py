@@ -38,6 +38,7 @@ urlpatterns = [
                   path('getAllPosts', posts.GetAllPosts.as_view()),
                   path('getPostTags', posts.GetPostTags.as_view()),
                   path('addTagToPost', posts.AddTagToPost.as_view()),
+                  path('deleteTagToPost', posts.DeleteTagToPost.as_view()),
                   path('deletePost', posts.DeletePost.as_view()),
                   path('changePost', posts.ChangePost.as_view()),
                   path('getUser', posts.GetUser.as_view()),
