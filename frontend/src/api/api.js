@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { ElMessage } from 'element-plus';
+import { useStore } from 'vuex';
+const store = useStore();
 
 export function post(url, data) {
     return new Promise((resolve,reject)=>{
@@ -16,7 +18,7 @@ export function post(url, data) {
 
 export function get(url){
     return new Promise((resolve,reject)=>{
-        axios.get('http://127.0.0.1:8000'+url,{headers:{"Authorization": store.state.token}}).then(response=>
+        axios.get('http://127.0.0.1:8000'+url).then(response=>
             {resolve(response.data)}).catch((error)=>{
                 ElMessage({
                     message: "网络连接失败",

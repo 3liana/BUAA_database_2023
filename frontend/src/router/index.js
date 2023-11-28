@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import VueCookies from 'vue-cookies'
 
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -16,10 +17,10 @@ const router = createRouter({
       children:[
         {
           path: '/',
-          redirect: '/main/all'
+          redirect: '/main/post'
         },
         {
-          path:'/main/:category',
+          path:'/main/post',
           name: '首页',
           meta: {
             needLogin: true,
@@ -28,13 +29,25 @@ const router = createRouter({
           component: () => import("@/views/main/Main.vue")
         },
         {
+          path: '/main/post/:post_id(\\d+)',
+          name: '帖子详情',
+          props: true,
+          meta:{
+            needLogin: true,
+            menuCode: "main",
+            title: "求物",
+            type: "buy"
+          },
+          component: () => import("@/views/main/PostDetailView.vue")
+        },
+        {
           path: '/myshare',
           name: '我发布的订单',
           meta: {
             needLogin: true,
             menuCode: "share"
           },
-          component: () => import("@/views/share/Share.vue")
+          component: () => import("@/views/share/MyOrderView.vue")
         },
         {
           path: '/finished',
@@ -75,6 +88,7 @@ const router = createRouter({
 
       ]
     },
+   
     
     
 
