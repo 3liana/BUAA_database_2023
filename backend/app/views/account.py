@@ -97,41 +97,50 @@ class Login(APIView):
 
 class SetAvator(APIView):
     def post(self, req: Request):
+        value = -1
+        avator_id = -1
+        file = req.FILES.get('photo')
         try:
             username = req.data['username']  # 得到用户名
             user = User.objects.get(username=username)  # 查找用户对象
-            Avator.objects.filter(user=user).delete()  # 根据用户对象找到头图对象 删除以前这个用户的头像
-            pic = Avator.objects.create(
-                file=req.FILES.get('photo'),
-                user=user,
-            )  # 创建新头像
-            pic.save()
-            return Response({
-                'value': 0,
-                'photo_id': pic.id,
-            })
+            try:
+                item = Avator.objects.get(user=user)
+                item.file = file
+                item.save()
+                avator_id = item.id
+            except Avator.DoesNotExist:
+                pic = Avator.objects.create(
+                    file=file,
+                    user=user,
+                )
+                pic.save()
+                avator_id = pic.id
+            value = 0
         except Exception as e:
             print(e)
-            return Response({
-                'value': 1,
-                'photo_id': -1,
-            })
+            value = 1
+        return Response({
+            'value': value,
+            'avator_id': avator_id,
+        })
 
 
 class GetAvator(APIView):
     def post(self, req: Request):
         username = req.data['username']
+        path = ''
         try:
             user = User.objects.get(username=username)
             pic = Avator.objects.get(user=user)
-            return Response({
-                'value': 0,
-                'path': pic.file.path
-            })
-        except Avator.DoesNotExist:
-            return Response({
-                'value': 1
-            })
+            path = pic.file.path
+            value = 0
+        except Exception as e:
+            print(e)
+            value = 1
+        return Response({
+            'value': value,
+            'path': path
+        })
 
 
 class MyPosts(APIView):
@@ -264,7 +273,7 @@ class BanAUser(APIView):
 
 
 class CheckBan(APIView):
-    def post(self,req:Request):
+    def post(self, req: Request):
         username = req.data['username']
         value = -1
         isBaned = -1
@@ -280,5 +289,5 @@ class CheckBan(APIView):
             value = 1
         return Response({
             'value': value,
-            'isBaned':isBaned,
+            'isBaned': isBaned,
         })
