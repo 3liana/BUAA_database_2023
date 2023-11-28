@@ -47,8 +47,8 @@ urlpatterns = [
                   path('getCommodityPictures', commodities.GetCommodityPictures.as_view()),
                   path('addCommodityPicture', commodities.AddCommodityPicture.as_view()),
                   path('checkIfOrdered', commodities.CheckIfOrdered.as_view()),
-                  path('belongToPost', commodities.BelongToPost),
-                  path('getCommodityDetail', commodities.GetCommodityDetail),
+                  path('belongToPost', commodities.BelongToPost.as_view()),
+                  path('getCommodityDetail', commodities.GetCommodityDetail.as_view()),
                   # 关于订单的功能
                   path('createOrder', orders.CreateOrder.as_view()),
                   path('cancelOrder', orders.CancelOrder.as_view()),
