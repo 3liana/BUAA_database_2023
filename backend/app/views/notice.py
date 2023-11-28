@@ -36,6 +36,7 @@ class AllNotice(APIView):
             notices = Notice.objects.all()
             for notice in notices:
                 return_data.append({
+                    'notice_id': notice.id,
                     'time': notice.time,
                     'title': notice.title,
                     'content': notice.content,
