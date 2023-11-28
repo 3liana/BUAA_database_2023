@@ -188,14 +188,14 @@ const buyCommodity = (commodity_id)=>{
     };
     var data = createOrder(params);
     data.then((result)=>{
-      if(result.value == 0){
+      if(result.value == 0) {
         proxy.Message.success("订单创建成功");
       } else {
         proxy.Message.error("订单创建失败");
       }
       //order_int
     });
-
+    router.push('/finished');
 };
 
 </script>

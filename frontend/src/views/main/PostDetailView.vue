@@ -213,7 +213,7 @@ const handleSegment3Change = (val)=> {
 
 
 
-const getAllTags = () => {
+const getAllTags = async() => {
     var data = allTags();
     data.then((result)=>{
       tags.value = result.all_tags;
@@ -226,18 +226,9 @@ const judgeTagInPosts = (tag_id)=> {
   return postTags.value.some(post_tag => post_tag.tag_id === tag_id);
 }
 
-const getTagName = (tag_id) => {
-  var data = getTagDetail(tag_id);
-  data.then((result)=>{
-    if (result.value != 0){
-      //console.log(result.value)
-      proxy.Message.error("查询tag名失败");
-    }
-    return result.name;
-  })
-};
 
-const deleteTag = (tag_id)=> {
+
+const deleteTag = async (tag_id)=> {
   
   proxy.Confirm(`你确定要删除该tag吗`, async() => {
     var params = {
@@ -249,6 +240,8 @@ const deleteTag = (tag_id)=> {
     data.then((result)=>{
       if (result.value == 0) {
         proxy.Message.success("删除tag成功");
+        initTag();
+        router.go();
       } else {
         proxy.Message.error("删除tag失败");
       }
@@ -256,7 +249,7 @@ const deleteTag = (tag_id)=> {
   });
 }
 
-const addTag = (tag_id)=> {
+const addTag = async (tag_id)=> {
     var params = {
       "tag_id" : String(tag_id),
       "post_id" : postCache.value.post_id,
@@ -271,8 +264,8 @@ const addTag = (tag_id)=> {
     });
 };
 
-const addTags = ()=> {
-  tags.value.forEach((item, index)=>{
+const addTags = async()=> {
+  tags.value.forEach(async(item, index)=>{
     console.log(checkTags.value[index]);
     if (checkTags.value[index] && !judgeTagInPosts(item.tag_id)) {
       addTag(item.tag_id);  
@@ -285,6 +278,7 @@ const addTags = ()=> {
     addTag(tags.value[tag].tag_id);
   }*/
   initTag();
+  router.go();
 };
 
 const closeDialog1 = ()=> {
@@ -377,12 +371,10 @@ const selectedGood = ref({
 
 onMounted(() => {
     initData();
+});
 
-}
-)
-
-const initPost = ()=>{
-  console.log(postCache.value.post_id);
+const initPost = async()=>{
+  //console.log(postCache.value.post_id);
 
     
   //post
@@ -396,64 +388,51 @@ const initPost = ()=>{
  
 }
 
-const initCom = ()=>{
+const initCom = async()=>{
     //commodities
-    var data2 = getPostCommodities(postCache.value.post_id);
-    data2.then((result)=>{
-        Object.assign(commodities.value ,result.commodities);
-        //console.log(commodities.value[0].commodity_id);
-
-        //then中代码滞后，所以应加在其中
+    var result = await getPostCommodities(postCache.value.post_id);
+    Object.assign(commodities.value ,result.commodities);
         //photos 遍历每个commodity
-        for (var element of commodities.value) {
+        commodities.value.forEach(async (element)=> {
           //console.log(element.commodity_id);
-          var result2 = checkIfOrdered(element.commodity_id);
-          result2.then((result)=>{
-            //console.log(result);
-            element.state = result;
-            //console.log(element.state);
-          });
-        
-          var result1 = getAllPhotos(element.commodity_id);
-          element.photos = result1;
-        };
+          var result2 = await checkIfOrdered(element.commodity_id);
+          element.state = result2;
+          console.log(element.state);
+          var result1 = await getCommodityPictures(element.commodity_id);
+          element.photos = result1.pictures;
+        });
+          
+};
 
-
-    });
-
-    
-
-}
-
-const initTag = ()=> {
+const initTag = async()=> {
     getAllTags();
     //获取所有该帖子的tags
-    var data0 = getPostTags(postCache.value.post_id);
-    data0.then((result)=>{
+    var result = await getPostTags(postCache.value.post_id);
       if (result.value == 0) {
         proxy.Message.success("获取帖子tag成功");
-        console.log(result.tag_ids.length);
-        for (var tag_id in result.tag_ids) {
-          console.log(tag_id);
+        //console.log(result.tag_ids.length);
+
+        result.tag_ids.forEach(async (tag_id)=> {
+          //console.log(tag_id);
           if (tag_id != 0) {
-            var name = getTagName(tag_id);
+            var detail = await getTagDetail(tag_id);
            
-            console.log(name);
+            //console.log(detail.name);
             postTags.value.push({
-            "name" :  name,
+            "name" :  detail.name,
             "tag_id" : tag_id,
           });
         }
-      }
+        });
       } else {
         proxy.Message.error("获取帖子tag失败");
       }
     
       //[int]
-    });
+    
 }
 
-const initData = ()=> {
+const initData = async()=> {
     initPost();
     initCom();
     //Tag
@@ -473,14 +452,14 @@ const addCommodity = (item)=> {
     data.then((result)=>{
       if (result.value == 0) {
         proxy.Message.success("创建商品成功");
+        initCom();
+        router.go();
       } else {
         proxy.Message.console.error("创建商品失败");
       }
       // result.commodity_id;
     });
-    initCom();
-    router.go();
-
+  
 };
 
 
@@ -495,14 +474,6 @@ const addComPhoto = (item)=>{
       //photo_id
     });
 };
-
-const getAllPhotos = (commodity_id)=>{
-  var data = getCommodityPictures(commodity_id);
-
-  data.then((result)=>{
-    return result.pictures;
-  })
-}
 
 
 </script>

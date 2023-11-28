@@ -41,22 +41,40 @@ const router = createRouter({
           component: () => import("@/views/main/PostDetailView.vue")
         },
         {
+          path: '/main/notice',
+          name: '公告栏',
+          meta: {
+            needLogin: true,
+            menuCode: "main"
+          },
+          component: () => import("@/views/main/Notice.vue")
+        },
+        {
           path: '/myshare',
-          name: '我发布的订单',
+          name: '我的帖子',
           meta: {
             needLogin: true,
             menuCode: "share"
           },
-          component: () => import("@/views/share/MyOrderView.vue")
+          component: () => import("@/views/share/MyPostView.vue")
         },
         {
-          path: '/finished',
-          name: '已完成的订单',
+          path: '/finished/buyer',
+          name: '我作为买家的订单',
           meta: {
             needLogin: true,
             menuCode: "finished"
           },
-          component: () => import("@/views/finished/Finished.vue")
+          component: () => import("@/views/finished/BuyOrder.vue")
+        },
+        {
+          path: '/finished/seller',
+          name: '我作为卖家的订单',
+          meta: {
+            needLogin: true,
+            menuCode: "finished"
+          },
+          component: () => import("@/views/finished/SellOrder.vue")
         },
         {
           path: '/settings/sysSetting',
@@ -77,13 +95,13 @@ const router = createRouter({
           component: () => import("@/views/admin/UserList.vue")
         },
         {
-          path: '/settings/fileList',
+          path: '/settings/noticeList',
           name: '用户文件',
           meta: {
             needLogin: true,
             menuCode: "settings"
           },
-          component: () => import("@/views/admin/FileList.vue")
+          component: () => import("@/views/admin/NoticeList.vue")
         },
 
       ]

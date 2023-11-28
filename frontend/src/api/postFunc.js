@@ -1,3 +1,4 @@
+
 import { post, get} from './api';
 export function inviteUserIntoChatGroup(params){
 	var data=new FormData();
@@ -53,6 +54,7 @@ export function createPost(params) {
 
 export function getPost(post_id) {
 	var data = new FormData();
+	console.log(post_id);
 	data.append("post_id" , post_id);
 	return post('/api/getPost', data);
 }
@@ -153,4 +155,55 @@ export function addTagToPost(params) {
 	console.log(params);
 	
 	return post('/api/addTagToPost', data);
+}
+
+export function createNotice(params) {
+	var data = new FormData();
+	data.append("username", params.username);
+	data.append("title", params.title);
+	data.append("content", params.content);
+	console.log(params);
+	return post('/api/createNotice', data);
+
+}
+
+export function allNotice() {
+	return post('/api/allNotice', new FormData());
+}
+
+export function deleteNotice(notice_id) {
+	var data = new FormData();
+	data.append("notice_id", notice_id);
+	return post('/api/deleteNotice', data);
+}
+
+export function myPosts(username) {
+	var data = new FormData();
+	data.append("username", username);
+	return post('/api/myPosts', data);
+}
+
+export function getOrder(order_id) {
+	var data = new FormData();
+	data.append("order_id", order_id);
+	return post('/api/getOrder', data);
+
+}
+
+export function myOrdersAsBuyer(username) {
+	var data = new FormData();
+	data.append("username", username);
+	return post('/api/myOrdersAsBuyer', data);
+}
+
+export function myOrdersAsSaler(username) {
+	var data = new FormData();
+	data.append("username", username);
+	return post('/api/myOrdersAsSaler', data);
+}
+
+export function getUserInfo(username) {
+	var data = new FormData();
+	data.append("username", username);
+	return post('/api/getUserInfo', data);
 }
