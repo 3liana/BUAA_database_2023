@@ -123,9 +123,9 @@ class GetPostTags(APIView):
         tag_ids = []
         value = -1
         try:
-            tags = Tag_Post.objects.filter(post__id=post_id)
-            for tag in tags:
-                tag_ids.append(tag.id)
+            post_tags = Tag_Post.objects.filter(post__id=post_id)
+            for post_tag in post_tags:
+                tag_ids.append(post_tag.tag.id)
             value = 0
         except Exception as e:
             print(e)
