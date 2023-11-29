@@ -207,3 +207,16 @@ export function getUserInfo(username) {
 	data.append("username", username);
 	return post('/api/getUserInfo', data);
 }
+
+export function getCommodityDetail(commodity_id) {
+	var data = new FormData();
+	data.append("commodity_id", commodity_id);
+	return post('/api/getCommodityDetail', data);
+}
+
+export function cancelOrder(order_id) {
+	var data = new FormData();
+	console.log(order_id);
+	data.append("order_id", order_id);
+	return post('/api/cancelOrder', data);
+}
