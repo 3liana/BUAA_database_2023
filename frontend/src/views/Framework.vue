@@ -109,16 +109,13 @@
                 </div>
                 <div class="menu-sub-list">
                   <div @click="jump(sub)" 
-                  :class="['menu-item-sub', sub.menuCode==currentMenu.menuCode ? 'active':'']" 
+                  :class="['menu-item-sub', sub.path == currentPath ? 'active':'']" 
                   v-for="sub in currentMenu.children">
                     <span :class="['iconfont', 'icon-'+sub.icon]" v-if="sub.icon"></span>
                     <span class="text">{{ sub.name }}</span>
                   </div>
                   <div class="tips" v-if="currentMenu&& currentMenu.tips">{{ currentMenu.tips }}</div>
-                  <div class="space-info">
-                    <div >空间使用</div>
-                    <div class="percent"></div>
-                  </div>
+                  
                 </div>
             </div>
             
@@ -177,13 +174,19 @@ const menus = [
         category: "all",
         path: "/main/post",
       },
+      {
+        icon: "video",
+        name: "公告栏",
+        category: "notice",
+        path: "/main/notice",
+      },
       
     ],
   },
   {
     path: "/myshare",
     icon: "share",
-    name: "我发布的订单",
+    name: "我的帖子",
     menuCode: "share",
     allShow: true,
     children: [
@@ -191,9 +194,9 @@ const menus = [
     ],
   },
   {
-    path: "/finished",
+    path: "/finished/buyer",
     icon: "del",
-    name: "我购买的订单",
+    name: "我的订单",
     menuCode: "finished",
     tips: "为你保存10天内完成的订单",
     allShow: true,
@@ -202,26 +205,26 @@ const menus = [
         name: "我购买的订单",
         path: "/finished/buyer",
       },
+      {  
+        name: "我发布的订单",
+        path: "/finished/seller",
+      }
     ],
   },
   {
-    path: "/settings/fileList",
+    path: "/settings/userList",
     icon: "settings",
     name: "设置",
     menuCode: "settings",
     allShow: false,
     children: [
       {
-        name: "用户文件",
-        path: "/settings/fileList",
-      },
-      {
         name: "用户管理",
         path: "/settings/userList",
       },
       {
-        path: "/settings/sysSetting",
-        name: "系统设置",
+        name: "公告管理",
+        path: "/settings/noticeList",
       },
     ],
   },
@@ -231,7 +234,7 @@ const currentMenu = ref({});
 const currentPath = ref();
 
 const jump = (data)=> {
-  if(!data.path || data.menuCode==currentMenu.menuCode) {
+  if(!data.path || data.menuCode==currentMenu.value.menuCode) {
     //path为空或就是当前页面
     return;
   }
