@@ -46,7 +46,9 @@ const cookieUserInfo = proxy.VueCookies.get("userInfo");
 
 const show = (data)=> {
     formData.value = Object.assign({}, data);
-    formData.value.avatar = { name: data.name, avatar: data.avatar};
+    formData.value.name = data.name;
+    //formData.value.avatar = {name: cookieUserInfo.name, avatar: cookieUserInfo.avatar};
+    //console.log(formData.value.avatar);
     dialogConfig.value.show = true;
 };
 
@@ -72,18 +74,19 @@ const submitForm= async ()=> {
         dialogConfig.value.show = false;
         return;
     }
-    //formData.value.name:->photo_name
-    //p
     let params = {
         username: cookieUserInfo.name,
         photo: formData.value.avatar,
     };
-    //console.log(params.username);
-    //console.log(params.photo);
+    console.log(params);
     var value;
     value = setAvatar(params);
     value.then((result)=>{
-        console.log(result);
+        if (result.value == 0) {
+            proxy.Message.success("上传头像成功");
+        } else {
+            proxy.Message.error("上传头像失败");
+        }
         //value? 
         //photo_id?
         if (!result)

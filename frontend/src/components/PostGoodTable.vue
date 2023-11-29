@@ -15,7 +15,7 @@
               </div>
               <div class="post-photos">
                 <!--item.photos-->
-                <img v-for="photo in item.photos" :src="photo.path"  :key="photo.photo_id" class="post-photo" />
+                <img v-for="photo in item.photos" :src="'data:image/jpeg;base64,' +photo.base64"  :key="photo.photo_id" class="post-photo" />
               </div>
 
 

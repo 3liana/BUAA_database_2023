@@ -5,10 +5,7 @@
         <img :src="localFile" />
       </template>
       <template v-else>
-        <img
-          :src="`${modelValue.avatar}`"
-          v-if="modelValue && modelValue.avatar"/>
-        <img :src="`/api/getAvatar/${modelValue.username}`" v-else />
+        <img :src="getMyAvatar()" />
       </template>
     </div>
     <div class="select-btn">
@@ -28,6 +25,7 @@
 <script setup>
   import { ref, reactive, getCurrentInstance } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import { getAvatar } from "../api/postFunc";
 const { proxy } = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
@@ -50,7 +48,15 @@ const uploadImage = async (file) => {
   img.onload= ({ target }) => {
     localFile.value = target.result;
   };
+  //modelValue = file;
   emit("update:modelValue", file);
+};
+
+const getMyAvatar = ()=>{
+  var data = getAvatar(proxy.VueCookies.get("userInfo").name);
+  data.then((result)=>{
+    return result.base64;
+  })
 };
 
 </script>

@@ -28,13 +28,19 @@
                   <!--返回上一页面-->
                   
                     <div class="avatar">
-                      <Avatar 
-                      :name="userInfo.name" 
-                      :avatar="userInfo.avatar"
-                      :timestamp="timestamp"
-                      :width="46"
-                      v-if="userInfo && userInfo.name"
-                      ></Avatar>
+                      {{ console.log(userInfo.avatar) }}
+                      <template>
+                        <div v-if="loading.able">
+                        <span class="avatar" :style="{ width: '70px', height:  '70px'}">
+                         {{ console.log(userInfo.avatar) ,console.log(loading.able) }}
+                          <img 
+                            v-if="loading.able"
+                            :key="loading.key"
+                            :src="`data:image/jpeg;base64,${userInfo.avatar}`"
+                            >
+                           </span>
+                          </div>
+                        </template>
                     </div>
                     <span class="nick-name" v-if="userInfo">{{ userInfo.name }}</span>
                     
@@ -143,12 +149,13 @@ import {
   watch,
   nextTick,
   computed,
+  onMounted,
 } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import UpdateAvatar from "./UpdateAvatar.vue";
 import Avatar from "../components/Avatar.vue";
 import Dialog from "../components/Dialog.vue";
-import {changePassWord} from "../api/postFunc";
+import {changePassWord, getAvatar} from "../api/postFunc";
 
 
 const { proxy } = getCurrentInstance();
@@ -158,7 +165,10 @@ const route = useRoute();
 const timestamp = ref(0);
 
 //登录时已经将信息保存到cookie的
-const userInfo = ref(proxy.VueCookies.get("userInfo"));
+const userInfo = ref({
+  "name" : proxy.VueCookies.get("userInfo").name,
+  "avatar" : null,
+});
 
 const menus = [
   {
@@ -233,6 +243,30 @@ const menus = [
 const currentMenu = ref({});
 const currentPath = ref();
 
+onMounted(()=>{
+    getMyAvatar();
+})
+
+const loading = ref({
+  "able" : false,
+  "key" : 0,
+});
+
+const getMyAvatar = async ()=>{
+    var result =  await getAvatar(proxy.VueCookies.get("userInfo").name);
+    userInfo.value.avatar = result.base64;
+    if (result.value != 0) {
+        proxy.Message.error("获得头像失败");
+    } else {
+        //console.log(userInfo.avatar);  
+        //userInfo.avatar = result.base64;
+        console.log(userInfo.value.avatar);  
+        loading.value.able = true;  
+        loading.value.key  += 1;
+        console.log(loading.value.key );
+    }
+};
+
 const jump = (data)=> {
   if(!data.path || data.menuCode==currentMenu.value.menuCode) {
     //path为空或就是当前页面
@@ -271,8 +305,9 @@ const updateAvatar = ()=> {
 };
 //回调函数，更新显示的头像
 const reloadAvatar = ()=>{
-  userInfo.value = proxy.VueCookies.get("userInfo");
-  //timestamp.value = (new Data()).getTime();
+  getMyAvatar();
+  //userInfo.value.avatar = ()
+  timestamp.value = (new Data()).getTime();
 };
 
 const formData1 = ref({});

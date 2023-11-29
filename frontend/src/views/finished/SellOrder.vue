@@ -27,9 +27,9 @@
                 
               </div>
               <div>
-                <button @click="cancel(item.order_id)">
+                <el-button @click="cancel(item.order_id)">
                   取消订单
-                </button>
+                </el-button>
               </div>
               </div>
               </div>
@@ -42,7 +42,7 @@
 <script setup>
     import {ref, reactive, getCurrentInstance, nextTick, onMounted } from "vue";
     import {useRouter, useRoute} from "vue-router";
-    import {myOrdersAsSaler, getUserInfo, getOrder, getCommodityDetail} from '../../api/postFunc';
+    import {myOrdersAsSaler, getUserInfo, getOrder, getCommodityDetail, cancelOrder} from '../../api/postFunc';
     import Dialog from '../../components/Dialog.vue';
     
 
@@ -65,7 +65,8 @@
         var data = myOrdersAsSaler(userMessage.value.username);
         data.then((result) => {
             if (result.value != 0) {
-                proxy.Message.error("获取订单失败");
+                //不存在
+                //proxy.Message.error("获取订单失败");
             } else {
                 orderIds.value = result.order_ids;
                 getContent();

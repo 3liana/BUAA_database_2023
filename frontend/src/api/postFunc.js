@@ -6,7 +6,7 @@ export function inviteUserIntoChatGroup(params){
 	data.append("password",params.password);
     data.append("phone",params.phone);
 	data.append("wehcat",params.wechat);
-	console.log(params);
+	//console.log(params);
 	return post('/api/register/',data);
 }
 
@@ -21,19 +21,22 @@ export function userLogin(params) {
 export function setAvatar(params) {
 	var data = new FormData();
 	data.append("username", params.username);
-	data.append("photo", params.username);
-	return post('/api/setAvatar', data);
+	data.append("photo", params.photo);
+	return post('/api/setAvator', data);
 }
 
 export function getAvatar(username) {
-	return get('/api/getAvatar/'+`${username}`);
+	var data = new FormData();
+	data.append("username", username);
+	//console.log(username);
+	return post('/api/getAvator', data);
 }
 
 export function changePassWord(params) {
 	var data = new FormData();
 	data.append("username", params.username);
 	data.append("new_password", params.password);
-	console.log(params);
+	//console.log(params);
 	return post('/api/changePassword', data);
 }
 
@@ -45,7 +48,7 @@ export function logout() {
 export function createPost(params) {
 	var data = new FormData();
 	data.append("username", params.username);
-	console.log(params.username);
+	//console.log(params.username);
 	data.append("title", params.title);
 	data.append("content", params.content);
 	
@@ -54,7 +57,7 @@ export function createPost(params) {
 
 export function getPost(post_id) {
 	var data = new FormData();
-	console.log(post_id);
+	//console.log(post_id);
 	data.append("post_id" , post_id);
 	return post('/api/getPost', data);
 }
@@ -152,7 +155,7 @@ export function addTagToPost(params) {
 	var data = new FormData();
 	data.append("post_id", params.post_id);
 	data.append("tag_id", params.tag_id);
-	console.log(params);
+	//console.log(params);
 	
 	return post('/api/addTagToPost', data);
 }
@@ -162,7 +165,7 @@ export function createNotice(params) {
 	data.append("username", params.username);
 	data.append("title", params.title);
 	data.append("content", params.content);
-	console.log(params);
+	//console.log(params);
 	return post('/api/createNotice', data);
 
 }
@@ -199,6 +202,7 @@ export function myOrdersAsBuyer(username) {
 export function myOrdersAsSaler(username) {
 	var data = new FormData();
 	data.append("username", username);
+	//console.log(username);
 	return post('/api/myOrdersAsSaler', data);
 }
 
@@ -217,6 +221,6 @@ export function getCommodityDetail(commodity_id) {
 export function cancelOrder(order_id) {
 	var data = new FormData();
 	console.log(order_id);
-	data.append("order_id", order_id);
+	//data.append("order_id", order_id);
 	return post('/api/cancelOrder', data);
 }
