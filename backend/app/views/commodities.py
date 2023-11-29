@@ -5,6 +5,7 @@ from rest_framework.views import APIView, Request
 from rest_framework.response import Response
 import uuid
 import os
+from app.views.util import changePicPath
 
 from app.models import *
 
@@ -51,6 +52,7 @@ class GetCommodityPictures(APIView):
             return_data.append({
                 'photo_id': item.id,
                 'path': item.file.path,
+                'base64':changePicPath(item.file.path)
             })
         return Response({'pictures': return_data})
 
