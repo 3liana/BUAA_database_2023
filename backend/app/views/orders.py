@@ -73,7 +73,7 @@ class GetOrder(APIView):
         except Exception as e:
             value = 1
             print(e)
-        return ({
+        return Response({
             'value': value,
             'time': order.time.isoformat(),
             'saler_name': saler_name,

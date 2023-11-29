@@ -208,15 +208,15 @@ export function getUserInfo(username) {
 	return post('/api/getUserInfo', data);
 }
 
-export function BanAUser(username){
+export function getCommodityDetail(commodity_id) {
 	var data = new FormData();
-	data.append("username", username);
-	return post('api/BanAUser', data);
+	data.append("commodity_id", commodity_id);
+	return post('/api/getCommodityDetail', data);
 }
 
-export function CheckBan(username){
+export function cancelOrder(order_id) {
 	var data = new FormData();
-	data.append("username", username);
-	return post('api/CheckBan', data);
-	//isBand:0被封号，1未被封号
+	console.log(order_id);
+	data.append("order_id", order_id);
+	return post('/api/cancelOrder', data);
 }
