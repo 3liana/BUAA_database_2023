@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView, Request
 from rest_framework.response import Response
-
+from app.views.util import changePicPath
 from app.models import *
 
 
@@ -139,7 +139,8 @@ class GetAvator(APIView):
             value = 1
         return Response({
             'value': value,
-            'path': path
+            'path': path,
+            'base64':changePicPath(path)
         })
 
 
