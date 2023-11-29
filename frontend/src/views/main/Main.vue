@@ -2,7 +2,7 @@
     <div>
         <el-form-item>
             <el-button
-            color="#626aef"
+            type="primary"
             size="large"
             @click="showDialog">
                 发布帖子
@@ -65,10 +65,9 @@
       <!-- 展示所有帖子的内容 -->
       <div id="content" style="overflow:auto">
         <div class="common-list" >
-          <div class="seperate">
           <div class="common-wrap" v-for="item in allPosts" :key="item.post_id">
-            
             <div class="common-item">
+              <div class="post-separator"></div>
               
              <router-link :to="`/main/post/${item.post_id}`"
               type="primary"
@@ -77,22 +76,21 @@
              >{{ item.title }}</router-link>
               <div class="post-content">
                 <p class="post-info">帖子编号: {{ item.post_id }}</p>
-                <p class="post-info">发布者: {{ item.username }}</p>
+                <p class="post-info">作者: {{ item.username }}</p>
                 <p class="post-info">内容: {{ item.content }}</p>
-                <p class="post-info">发布于: {{ item.data }}</p>             
+                <p class="post-info">发布于: {{ item.data }}</p>
+                
               </div>
             <div v-if="item.username == userMessage.username">
-              <br>
-              <p class="tips">这是你发布的贴子，你可以对其进行以下修改： </p>
-              <el-button plain
-              color="#626aef"
+              <el-button 
+              type="primary"
+              size="large"
               @click="deleteP(item.post_id)">
                 删除帖子
               </el-button>
-
             <el-button 
-            color="#626aef"
-            plain
+            type="primary"
+            size="large"
             @click="showDialog1">
                 修改帖子
             </el-button>
@@ -144,7 +142,7 @@
             </Dialog>
             </div>
           </div>
-        </div>
+            
           </div>
         </div>
       </div>
@@ -348,10 +346,10 @@
  
   </script>
   
-<style>
-.post-title {
-  margin-bottom: 10px;
-  font-size: 22px;
+  <style>
+  .post-title {
+    margin-bottom: 10px;
+  font-size: 18px;
   font-weight: bold;
 }
 
@@ -374,7 +372,6 @@
   margin-bottom: 5px;
   font-size: 14px;
   font-weight: bold;
-
   }
 
   .modal {
@@ -394,13 +391,14 @@
     padding: 100px;
     border-radius: 20px;
     width: 100%;
-    height: 100%;
+  height: 100%;
   }
   
   .submit-com {
     background-color: white;
     padding: 20px;
     border-radius: 20px;
+
   }
 
   
@@ -412,9 +410,9 @@
 	--el-input-focus-border-color: #FF4400;
 }*/
 
-  /* button {
+  button {
     margin-bottom: 50px;
-  } */
+  }
 
 
 
@@ -441,14 +439,17 @@
       color: rgb(250, 68, 108);
     }
 
-    /* .el-button :hover{
-       /* width: 10vw; */
-      /*color: #fff;
+    .el-button {
+      width: 10vw;
+      color: #fff;
       font-size: 1rem;
       border: none;
-      border-radius: 50; 
-      
-    } */
+      border-radius: 0;
+      background-color: #FF0036;
+    }
+  
+
+
 
   .banner-slider {
     margin-left: 22vw;
@@ -459,7 +460,6 @@
     height: 460px;
     cursor: pointer;
   }
-
   .el-carousel__item h3 {
   color: #475669;
   font-size: 18px;
@@ -513,30 +513,17 @@
     .hot-wrap:hover {
       border: 1px solid #FF0036;
     }
-
-    .seperate{
-      display: flex;
-      flex-direction:row;
-      flex-wrap:wrap;
-      justify-content:left;
-      
-    }
   
 
-  /* .common-list {
+  .common-list {
     clear: both;
-  } */
-
-   .common-wrap {
-    background-color: rgba(235, 216, 255, 0.5);
-    width: 500px;
-    border: 15px solid rgba(214, 176, 255, 0.5);
-    padding: 15px;
-    margin: 25px;
-    box-shadow: 10px 10px 5px #888888;
-    
-      
-    } 
+    margin-left: 22vw;
+    margin-right: 22vw;
+   
+  }
+  .common-wrap {
+      margin-left: 22px;
+    }
 
   </style>
   

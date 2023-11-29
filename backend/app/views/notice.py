@@ -30,7 +30,7 @@ class CreateNotice(APIView):
 
 
 class AllNotice(APIView):
-    def post(self):
+    def post(self,req:Request):
         return_data = []
         try:
             notices = Notice.objects.all()
