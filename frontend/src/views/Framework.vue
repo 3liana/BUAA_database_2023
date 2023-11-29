@@ -413,6 +413,10 @@ const logout = () => {
   }
 }
 .body {
+  background:url("../assets/main_bg.png");
+  background-repeat: no-repeat;
+  background-attachment:fixed;
+  background-size: cover;
   display: flex;
   .left-sider {
     border-right: 1px solid #f1f2f4;
