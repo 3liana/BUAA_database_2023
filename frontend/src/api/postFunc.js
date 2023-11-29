@@ -207,3 +207,16 @@ export function getUserInfo(username) {
 	data.append("username", username);
 	return post('/api/getUserInfo', data);
 }
+
+export function BanAUser(username){
+	var data = new FormData();
+	data.append("username", username);
+	return post('api/BanAUser', data);
+}
+
+export function CheckBan(username){
+	var data = new FormData();
+	data.append("username", username);
+	return post('api/CheckBan', data);
+	//isBand:0被封号，1未被封号
+}
