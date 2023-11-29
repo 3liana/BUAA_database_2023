@@ -59,5 +59,7 @@ urlpatterns = [
                   path('deleteTag', tags.DeleteTag.as_view()),
                   path('getTagDetail', tags.GetTagDetail.as_view()),
                   # 关于公告的功能
-                  path('createNotice', notice.CreateNotice.as_view())
+                  path('createNotice', notice.CreateNotice.as_view()),
+                  path('allNotice', notice.AllNotice.as_view()),
+                  path('deleteNotice', notice.DeleteNotice.as_view()),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

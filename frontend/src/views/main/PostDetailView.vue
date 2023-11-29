@@ -182,9 +182,7 @@ const postCache = ref({
 });
 
 //每个帖子的tags
-const postTags = ref([
-  
-]);
+const postTags = ref([]);
 
 //所有tags?
 const tags = ref([
@@ -240,7 +238,7 @@ const deleteTag = async (tag_id)=> {
     data.then((result)=>{
       if (result.value == 0) {
         proxy.Message.success("删除tag成功");
-        initTag();
+        //initTag();
         router.go();
       } else {
         proxy.Message.error("删除tag失败");
@@ -277,7 +275,7 @@ const addTags = async()=> {
     console.log(tags.value[tag].tag_id);
     addTag(tags.value[tag].tag_id);
   }*/
-  initTag();
+  //initTag();
   router.go();
 };
 
@@ -328,10 +326,7 @@ const showDialog1 = ()=> {
   dialogConfig1.show = true;
 };
 
-const comFormData = ref({
-      
-      
-});
+const comFormData = ref({});
 
 const commodities = ref([
     {
@@ -362,12 +357,6 @@ const commodities = ref([
 
 ]);
 
-const selectedGood = ref({
-    "ids":{},
-    "num":0,
-});
-
-
 
 onMounted(() => {
     initData();
@@ -376,7 +365,6 @@ onMounted(() => {
 const initPost = async()=>{
   //console.log(postCache.value.post_id);
 
-    
   //post
   var data1 = getPost(postCache.value.post_id);
   data1.then((result)=>{
@@ -393,15 +381,15 @@ const initCom = async()=>{
     var result = await getPostCommodities(postCache.value.post_id);
     Object.assign(commodities.value ,result.commodities);
         //photos 遍历每个commodity
-        commodities.value.forEach(async (element)=> {
-          //console.log(element.commodity_id);
+        for(const element of commodities.value) {
+          console.log(element.commodity_id);
           var result2 = await checkIfOrdered(element.commodity_id);
-          element.state = result2;
-          console.log(element.state);
+          element.state = result2.value;
+          console.log(result2.value);
           var result1 = await getCommodityPictures(element.commodity_id);
           element.photos = result1.pictures;
-        });
-          
+          console.log(element.photos[0]);
+        }
 };
 
 const initTag = async()=> {
@@ -452,7 +440,7 @@ const addCommodity = (item)=> {
     data.then((result)=>{
       if (result.value == 0) {
         proxy.Message.success("创建商品成功");
-        initCom();
+        //initCom();
         router.go();
       } else {
         proxy.Message.console.error("创建商品失败");

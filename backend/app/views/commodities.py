@@ -52,7 +52,7 @@ class GetCommodityPictures(APIView):
             return_data.append({
                 'photo_id': item.id,
                 'path': item.file.path,
-                'base64':changePicPath(item.file.path)
+                'base64': changePicPath(item.file.path)
             })
         return Response({'pictures': return_data})
 
@@ -65,6 +65,7 @@ class AddCommodityPicture(APIView):
         try:
             commodity = Commodity.objects.get(id=commodity_id)
             pic = Photo.objects.create(
+                # base64=changePicPath(req.FILES.get('photo')),
                 file=req.FILES.get('photo'),
                 commodity=commodity,
             )

@@ -39,7 +39,7 @@ class CancelOrder(APIView):
     def post(self, req: Request):
         data = req.data
         order_id = data['order_id']
-        value = 0
+        value = -1
         try:
 
             Order.objects.get(id=order_id).delete()  # 删除order元组
@@ -48,7 +48,7 @@ class CancelOrder(APIView):
             # todo 检查一下会不会
             # c0.order = None
             # c0.save()
-            return (0)
+            value = 0
         except Exception as e:
             print(e)
             value = 1

@@ -2,6 +2,7 @@
     <div>
         <el-form-item>
             <el-button
+            v-if="userMessage.usertype==1"
             type="primary"
             size="large"
             @click="showDialog">
@@ -107,7 +108,7 @@
 
     const userMessage = ref({
         "username" : proxy.VueCookies.get("userInfo").name,
-
+        "usertype" : proxy.VueCookies.get("userInfo").usertype,
     })
 
     onMounted(() => {
@@ -117,13 +118,15 @@
     });
 
     const initData = ()=>{
+        console.log(userMessage.value.usertype);
         //getAllNotice
         var data = allNotice();
         data.then((result)=>{
             if (result.value != 0) {
                 proxy.Message.error("获取公告失败");
+            } else {
+                Object.assign(allNotices.value, result.return_data);
             }
-            Object.assign(allNotices.value, result.return_data);
         });
     };
 
@@ -169,7 +172,6 @@ const deleteThisNotice = (notice_id) => {
     data.then((result)=>{
         if (result.value == 0) {
             proxy.Message.success("删除公告成功");
-            initData();
             router.go();
         } else {
             proxy.Message.error("删除失败");

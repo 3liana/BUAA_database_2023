@@ -15,7 +15,7 @@
               </div>
               <div class="post-photos">
                 <!--item.photos-->
-                <img v-for="photo in commodities.photos" :src="photo.path"  :key="photo.photo_id" class="post-photo" />
+                <img v-for="photo in item.photos" :src="photo.path"  :key="photo.photo_id" class="post-photo" />
               </div>
 
 
@@ -24,7 +24,7 @@
                 <el-button
                 type="primary"
                 size="large"
-                @click="dialogConfig.show = true">
+                @click="addPicture(item.commodity_id)">
                 添加照片
                 </el-button>
               
@@ -42,9 +42,9 @@
               label-width="80px"
                @submit.prevent
               >
-              <el-form-item label="照片" prop="">
+              <el-form-item label="照片" prop="" >
                 <div class="img-show">
-
+                  
                   <template v-if="localFile">
                    <img :src="localFile" />
                   </template>
@@ -131,6 +131,11 @@ const dialogConfig = ref({
   ],
 });
 
+const addPicture = (commodity_id)=>{
+  dialogConfig.value.show = true;
+  formData.value.commodity_id = commodity_id;
+
+};
 
 const submitForm= async ()=> {
 
@@ -154,6 +159,7 @@ const submitForm= async ()=> {
         //photo_id?
         if (result.value == 0) {
           proxy.Message.success("添加照片成功");
+          router.go();
         } else {
           proxy.Message.error("添加照片失败");
         }
@@ -173,10 +179,12 @@ const uploadImage = async (file) => {
   console.log(img);
   img.onload= ({ target }) => {
     localFile.value = target.result;
+    console.log(localFile.value);
   };
-  
+ 
   //file 格式？
   formData.value.photo = file;
+  
   console.log(formData.value.photo);
   //emit("update:modelValue", file);
 };
@@ -190,12 +198,14 @@ const buyCommodity = (commodity_id)=>{
     data.then((result)=>{
       if(result.value == 0) {
         proxy.Message.success("订单创建成功");
+        router.push('/finished/buyer');
+        //window.location.reload();
       } else {
         proxy.Message.error("订单创建失败");
       }
       //order_int
     });
-    router.push('/finished');
+    
 };
 
 </script>
