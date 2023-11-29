@@ -64,7 +64,7 @@
         var data = myOrdersAsBuyer(userMessage.value.username);
         data.then((result) => {
             if (result.value != 0) {
-                proxy.Message.error("获取订单失败");
+                //proxy.Message.error("获取订单失败");
             } else {
                 orderIds.value = result.order_ids;
                 getContent();

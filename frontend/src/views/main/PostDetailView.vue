@@ -382,13 +382,13 @@ const initCom = async()=>{
     Object.assign(commodities.value ,result.commodities);
         //photos 遍历每个commodity
         for(const element of commodities.value) {
-          console.log(element.commodity_id);
+          //console.log(element.commodity_id);
           var result2 = await checkIfOrdered(element.commodity_id);
           element.state = result2.value;
-          console.log(result2.value);
+          //console.log(result2.value);
           var result1 = await getCommodityPictures(element.commodity_id);
           element.photos = result1.pictures;
-          console.log(element.photos[0]);
+          //console.log(element.photos[0]);
         }
 };
 
@@ -397,7 +397,7 @@ const initTag = async()=> {
     //获取所有该帖子的tags
     var result = await getPostTags(postCache.value.post_id);
       if (result.value == 0) {
-        proxy.Message.success("获取帖子tag成功");
+        //proxy.Message.success("获取帖子tag成功");
         //console.log(result.tag_ids.length);
 
         result.tag_ids.forEach(async (tag_id)=> {
