@@ -56,7 +56,7 @@
             </Dialog>
         </el-form-item>
     </div>
-     <!-- 展示所有帖子的内容 -->
+     <!-- 展示所有公告的内容 -->
      <div id="content" style="overflow:auto">
         <div class="common-list" >
           <div class="common-wrap" v-for="item in allNotices">
@@ -122,11 +122,12 @@
         //getAllNotice
         var data = allNotice();
         data.then((result)=>{
-            if (result.value != 0) {
+            if (result.value == 0) {
                 proxy.Message.error("获取公告失败");
             } else {
                 Object.assign(allNotices.value, result.return_data);
             }
+            
         });
     };
 
@@ -160,7 +161,7 @@
         data.then((result) => {
             if (result.value == 0) {
                 proxy.Message.success("发布公告成功");
-
+                router.go();
             } else {
                 proxy.Message.error("发布公告失败");
             }
