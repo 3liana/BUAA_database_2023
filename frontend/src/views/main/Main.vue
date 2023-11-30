@@ -69,27 +69,40 @@
         <div class="common-wrap" v-for="item in allPosts" :key="item.post_id">
           
           <div class="common-item">
-            
+            <el-tooltip content="点击查看详情" placement="top">
            <router-link :to="`/main/post/${item.post_id}`"
             type="primary"
             size="large"
             class="post-title" 
            >{{ item.title }}</router-link>
+           </el-tooltip>
+           
             <div class="post-content">
               <p class="post-info">帖子编号: {{ item.post_id }}</p>
               <p class="post-info">发布者: {{ item.username }}</p>
               <p class="post-info">内容: {{ item.content }}</p>
               <p class="post-info">发布于: {{ item.data }}</p>             
             </div>
-          <div v-if="item.username == userMessage.username">
-            <br>
-            <p class="tips">这是你发布的贴子，你可以对其进行以下修改： </p>
-            <el-button plain
-            color="#626aef"
-            @click="deleteP(item.post_id)">
-              删除帖子
-            </el-button>
 
+          <div v-if="item.username == userMessage.username">
+            <el-divider />
+            &nbsp;&nbsp;
+          
+          <el-popover
+            placement="top-start"
+            title="Warning"
+            :width="250"
+            trigger="hover"
+            content="点击删除这个帖子，此操作不可撤销"
+          >
+            <template #reference>
+              <el-button class="m-2" plain
+                color="#626aef"
+                @click="deleteP(item.post_id)">删除帖子</el-button>
+            </template>
+          </el-popover>
+
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <el-button 
           color="#626aef"
           plain
@@ -149,6 +162,8 @@
       </div>
     </div>
   </div>
+  
+  <el-backtop :right="100" :bottom="100" />
 </template>
 
 <script setup>
@@ -157,7 +172,6 @@
   import {createPost, getPost, getAllPosts, deletePost, changePost, allTags} from '../../api/postFunc';
   import Dialog from '../../components/Dialog.vue';
   
-
   const { proxy } = getCurrentInstance();
 
   const router = useRouter();
@@ -283,6 +297,7 @@
       ],
   });
 
+
   const showDialog = ()=> {
       dialogConfig.show = true;
   };
@@ -344,6 +359,8 @@
       });
     
   }
+
+  
   
 
 </script>
@@ -438,7 +455,7 @@ align-items: center;
   }
 
   .el-input__inner::placeholder {
-    color: rgb(250, 68, 108);
+    color: rgb(167, 167, 167);
   }
 
   /* .el-button :hover{
@@ -527,15 +544,22 @@ margin: 0;
   clear: both;
 } */
 
- .common-wrap {
-  background-color: rgba(235, 216, 255, 0.5);
-  width: 500px;
-  border: 15px solid rgba(214, 176, 255, 0.5);
-  padding: 15px;
+ .common-wrap{
+  background-color: rgba(251, 247, 255, 0.8); 
+  width: 330px;
+  /* border: 15px solid rgba(214, 176, 255, 0.5); */
+  padding: 20px;
   margin: 25px;
-  box-shadow: 10px 10px 5px #888888;
+  border-radius: 20px;
   
-    
+  transition: all .3s ease-in 0s;
+  -webkit-transition: all .3s;
+
   } 
+
+  .common-wrap:hover{
+    box-shadow: 10px 10px 5px #888888;
+    transform: scale(1.2);
+  }
 
 </style>
