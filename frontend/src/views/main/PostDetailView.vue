@@ -16,6 +16,7 @@
                   </button>
                 </div>
           </div>
+
           <el-form-item v-if="postCache.username==userMessage.username">
             <el-button
               type="primary"
@@ -68,6 +69,7 @@
            
           </el-form-item>
         </div>
+        
     <div class="post-separator"></div>
     <el-form-item v-if="postCache.username==userMessage.username">
       <el-button
@@ -178,7 +180,6 @@ const postCache = ref({
     "post_id" : route.params.post_id,
     "dialog" : false,
     
-
 });
 
 //每个帖子的tags

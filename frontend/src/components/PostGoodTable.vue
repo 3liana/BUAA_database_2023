@@ -1,7 +1,89 @@
 <template>
     <div id="content" style="overflow:auto" >
         <div class="common-list" >
-          <div class="common-wrap" v-for="item in commodities" :key="item.commodity_id">
+          <el-carousel :interval="4000" type="card" height="350px">
+                  <el-carousel-item v-for="item in commodities" :key="item.commodity_id">
+                    <h3 text="2xl">
+                      <div class="post-content">
+                <p class="post-info">商品编号: {{ item.commodity_id }}</p>
+                <p class="post-info">商品名：{{ item.name }}</p>
+                <p class="post-info">描述 {{ item.dc }}</p>
+                <p class="post-info">价格: {{ item.price }}</p>
+                <p class="post-info">状态: {{ item.state == 0 ?"未出售":"已出售" }}</p>
+                
+              </div>
+              <div class="post-photos">
+                
+                <img v-for="photo in item.photos" :src="'data:image/jpeg;base64,' +photo.base64"  :key="photo.photo_id" class="post-photo" />
+              </div>
+
+              <div v-if="post_user==userMessage.username">
+                
+                <el-button
+                type="primary"
+                size="large"
+                @click="addPicture(item.commodity_id)">
+                添加照片
+                </el-button>
+              </div>
+                <div v-else >
+                <el-button v-if="item.state == 0"
+                type="primary"
+                size="large"
+                @click="buyCommodity(item.commodity_id)">
+                购买
+                </el-button>
+              </div>
+            </h3>
+                  </el-carousel-item>
+                </el-carousel>
+              
+
+              
+              <Dialog
+              :show="dialogConfig.show"
+              :title="dialogConfig.title"
+              :buttons="dialogConfig.buttons"
+              width="700px"
+              :showCancel="true"
+              @close="dialogConfig.show = false">
+
+              <el-form
+              :model="formData"
+              ref="formDataRef"
+              label-width="80px"
+               @submit.prevent
+              >
+              <el-form-item label="照片" prop="" >
+                <div class="img-show">
+                  
+                  <template v-if="localFile">
+                   <img :src="localFile" />
+                  </template>
+
+                </div>
+                <div class="select-btn">
+                 <el-upload
+                  name="file"
+                  :show-file-list="false"
+                   accept=".png,.PNG,.jpg,.JPG,.jpeg,.JPEG,.gif,.GIF,.bmp,.BMP"
+                  :multiple="false"
+                  :http-request="uploadImage">
+    
+                  <el-button type="primary">选择</el-button>
+                   </el-upload>
+                </div>
+              </el-form-item>
+              </el-form>
+
+              </Dialog>
+              </div>
+
+              
+
+                    
+
+          <!-- <div class="common-wrap" v-for="item in commodities" :key="item.commodity_id">
             <div class="common-item">
               <div class="post-separator"></div>
              
@@ -11,16 +93,16 @@
                 <p class="post-info">描述 {{ item.dc }}</p>
                 <p class="post-info">价格: {{ item.price }}</p>
                 <p class="post-info">状态: {{ item.state == 0 ?"未出售":"已出售" }}</p>
-                <!--显示状态-->
+                显示状态--><!--
               </div>
               <div class="post-photos">
-                <!--item.photos-->
+                item.photos--><!--
                 <img v-for="photo in item.photos" :src="'data:image/jpeg;base64,' +photo.base64"  :key="photo.photo_id" class="post-photo" />
               </div>
 
 
               <div v-if="post_user==userMessage.username">
-                <!--添加照片-->
+                添加照片--><!--
                 <el-button
                 type="primary"
                 size="large"
@@ -74,12 +156,12 @@
                 @click="buyCommodity(item.commodity_id)">
                 购买
                 </el-button>
-              </div>
+              </div> -->
           </div>
 
-          </div>
-        </div>
-      </div>
+         <!-- </div>
+         </div>
+      </div> -->
 
 
 </template>
@@ -279,6 +361,24 @@ const buyCommodity = (commodity_id)=>{
   object-fit: cover;
   margin-right: 10px;
   margin-bottom: 10px;
+}
+
+.el-carousel__item h3 {
+  color: #475669;
+  
+  /* line-height: 200px; */
+  margin: 0;
+  text-align: center;
+}
+
+.el-carousel__item:nth-child(2n) {
+  /*其他商品*/
+  background-color: rgba(174, 147, 216, 0.8);
+}
+
+.el-carousel__item:nth-child(2n + 1) {
+  /*正中商品*/ 
+  background-color: rgba(221, 197, 255, 0.8);
 }
 
 </style>
