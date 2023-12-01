@@ -6,41 +6,19 @@
                 <div class="name">北航十三公寓二手市场</div>
             </div>
             <div class="right-panel">
-                <el-popover
-                    :width="800"
-                    trigger="click"
-                    :v-model:visible="true"
-                    :offset="20"
-                    transition="none"
-                    :hide-after="0"
-                    :popper-style="{ padding: '0px' }"
-                >
-                <template #reference>
-                    <span class="iconfont icon-transfer"></span>
-                </template>
-                <template #default>
-                  
-                </template>
-            </el-popover>
+              
 
             <el-dropdown>
                 <div class="user-info">
                   <!--返回上一页面-->
                   
                     <div class="avatar">
-                      
-                      <template>
-                        <div v-if="loading.able">
-                        <span class="avatar" :style="{ width: '70px', height:  '70px'}">
-                         
-                          <img 
-                            v-if="loading.able"
-                            :key="loading.key"
-                            :src="`data:image/jpeg;base64,${userInfo.avatar}`"
-                            >
-                           </span>
-                          </div>
-                        </template>
+                     <Avatar
+                      :username="userInfo.name"
+                      :avatar="userInfo.avatar"
+                      :timestamp="timestamp"
+                      :width="46"
+                     ></Avatar>
                     </div>
                     <span class="nick-name" v-if="userInfo">{{ userInfo.name }}</span>
                     
@@ -263,7 +241,7 @@ const getMyAvatar = async ()=>{
         //console.log(userInfo.value.avatar);  
         loading.value.able = true;  
         loading.value.key  += 1;
-        //console.log(loading.value.key );
+        console.log(loading.value.key );
     }
 };
 
@@ -306,8 +284,9 @@ const updateAvatar = ()=> {
 //回调函数，更新显示的头像
 const reloadAvatar = ()=>{
   getMyAvatar();
+  router.go();
   //userInfo.value.avatar = ()
-  timestamp.value = (new Data()).getTime();
+  //timestamp.value = (new Data()).getTime();
 };
 
 const formData1 = ref({});
@@ -404,7 +383,7 @@ const logout = () => {
       align-items: center;
       cursor: pointer;
       .avatar {
-        margin: 0px 5px 0px 15px;
+        margin: 1px 5px 1px 15px;
       }
       .nick-name {
         color: rgb(88, 163, 212);

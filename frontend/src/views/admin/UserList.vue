@@ -3,20 +3,24 @@
       <table>
         <thead>
           <tr>
-            <th>ID</th>
             <th>Username</th>
+            <th>电话号码</th>
             <th>WeChat</th>
+            <th>是否被封禁</th>
             <th></th>
             <!-- Add more table headers as needed -->
           </tr>
         </thead>
         <tbody>
-          <tr v-for="user in users" :key="user.id">
-            <td>{{ user.id }}</td>
+          <tr v-for="user in users" :key="user.username">
             <td>{{ user.username }}</td>
+            <td>{{ user.phone }}</td>
             <td>{{ user.wechat }}</td>
+            <td>{{ user.isBand }}</td>
             <td>
-              <el-button @click="banUser(user.username)">
+              <el-button
+                v-if="userMessage.usertype == 1"
+                @click="banUser(user.username)">
                 封禁用户
               </el-button>
             </td>
@@ -30,7 +34,7 @@
 <script setup>
 import {ref, reactive, getCurrentInstance, nextTick, onMounted } from "vue";
 import {useRouter, useRoute} from "vue-router";
-import { banAUser } from '../../api/postFunc' 
+import { banAUser , allUsers} from '../../api/postFunc' 
 const { proxy } = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
@@ -40,8 +44,13 @@ onMounted(()=>{
   initData();
 });
 
-const initData = ()=>{
+const userMessage = ref({
+  "usertype" : proxy.VueCookies.get("userInfo").usertype,
+})
 
+const initData = async ()=>{
+  var result = await allUsers();
+  users.value = result.return_data;
 };
 
 const banUser = async (username)=>{

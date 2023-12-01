@@ -2,6 +2,7 @@
     <div>
         <el-form-item>
             <el-button
+            v-if="userMessage.usertype==1"
             type="primary"
             size="large"
             @click="showDialog">
@@ -54,7 +55,9 @@
             <td>{{ tag.tag_id }}</td>
             <td>{{ tag.name }}</td>
             <td>{{ tag.num }}</td>
-            <td> <el-button @click="deleteT(tag.tag_id)">
+            <td> <el-button
+              v-if="userMessage.usertype==1"
+               @click="deleteT(tag.tag_id)">
                 删除tag
                 </el-button></td>
             <!-- Add more table cells as needed -->
@@ -75,6 +78,10 @@ const route = useRoute();
 
 const tags = ref([]);
 const formData = ref({});
+const userMessage = ref({
+  "usertype" : proxy.VueCookies.get("userInfo").usertype,
+});
+
 
 onMounted(()=>{
     initData();

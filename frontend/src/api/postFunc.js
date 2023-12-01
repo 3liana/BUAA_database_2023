@@ -5,9 +5,9 @@ export function inviteUserIntoChatGroup(params){
 	data.append("name",params.name);
 	data.append("password",params.password);
     data.append("phone",params.phone);
-	data.append("wehcat",params.wechat);
+	data.append("wechat",params.wechat);
 	//console.log(params);
-	return post('/api/register/',data);
+	return post('/api/register',data);
 }
 
 export function userLogin(params) {
@@ -15,7 +15,7 @@ export function userLogin(params) {
 	data.append("name",params.name);
 	data.append("password",params.password);
 	
-	return post('/api/login/',data);
+	return post('/api/login',data);
 }
 
 export function setAvatar(params) {
@@ -241,4 +241,9 @@ export function banAUser(username) {
 	var data = new FormData();
 	data.append("username", username);
 	return post('/api/banAUser', data);
+}
+
+export function allUsers() {
+	var data = new FormData();
+	return post('/api/allUsers', data);
 }

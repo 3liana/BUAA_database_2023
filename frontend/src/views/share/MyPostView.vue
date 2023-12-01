@@ -118,7 +118,7 @@ const initData = async () => {
     var data = myPosts(userMessage.value.username);
     data.then((result) => {
         if (result.value != 0) {
-            proxy.Message.error("获取帖子失败");
+            //proxy.Message.error("获取帖子失败");
         } else {
             myPostIds.value = result.post_ids;
             getContent();
@@ -127,10 +127,10 @@ const initData = async () => {
 }
 
 const getContent = async ()=>{
-    console.log(myPostIds.value[0]);
-    console.log(myPostIds.value[1]);
+    //console.log(myPostIds.value[0]);
+    //console.log(myPostIds.value[1]);
     myPostIds.value.forEach(async (post_id)=> {
-        console.log(post_id);
+        //console.log(post_id);
         
         var result1 = await getPost(post_id);
         var params = {
@@ -139,7 +139,7 @@ const getContent = async ()=>{
           "content" : result1.content,
           "data" : result1.data,
         };
-        console.log(params);
+        //console.log(params);
         posts.value.push(params);
         
     });

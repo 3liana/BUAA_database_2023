@@ -343,13 +343,13 @@ const initCom = async()=>{
     Object.assign(commodities.value ,result.commodities);
         //photos 遍历每个commodity
         for(const element of commodities.value) {
-          //console.log(element.commodity_id);
+          console.log(element.commodity_id);
           var result2 = await checkIfOrdered(element.commodity_id);
           element.state = result2.value;
-          //console.log(result2.value);
+          console.log(result2.value);
           var result1 = await getCommodityPictures(element.commodity_id);
           element.photos = result1.pictures;
-          //console.log(element.photos[0]);
+          console.log(element.photos[0]);
         }
 };
 

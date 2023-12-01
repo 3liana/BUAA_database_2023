@@ -247,11 +247,11 @@
   };
 
   const initData = async()=>{
-      console.log("init!");
+      //console.log("init!");
       var value = getAllPosts();
       value.then((result) => {
           allPosts.value = result.allposts; 
-          console.log(allPosts.value[0].post_id);
+          //console.log(allPosts.value[0].post_id);
       })
   };
 

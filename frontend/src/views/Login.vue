@@ -240,7 +240,7 @@
                     //result.type -> 用户类型
                 })
             } else if (opType.value == 0) { 
-                //console.log(params);
+                console.log(params);
                 value = inviteUserIntoChatGroup(params);
                 value.then((result) => {
                     console.log(result);
@@ -257,22 +257,10 @@
                         proxy.Message.error('此用户名已被注册');
                         return;
                     }
-                })
+                });
             }
 
 
-            /*let result = await proxy.Request({
-                url:url,
-                params:params,
-                errorCallback:()=> {
-                   
-                    //刷新验证码(无)
-                },
-            })
-            if (!result) {
-                
-                return;
-            }*/
 
             //注册返回
             if(opType.value==0) {

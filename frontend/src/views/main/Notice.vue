@@ -69,12 +69,13 @@
                 <p class="post-info">发布于: {{ item.time }}</p>
                 <p class="post-info">内容: {{ item.content }}</p>
               </div>
-            </div>
-            <div v-if="item.username==userMessage.username">
+              <div v-if="userMessage.usertype==1">
                 <el-button @click="deleteThisNotice(item.notice_id)">
                     删除公告
                 </el-button>
             </div>
+            </div>
+            
         </div>
      </div>
 

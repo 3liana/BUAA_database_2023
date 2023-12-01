@@ -1,13 +1,14 @@
-
+<template>
+    <span class="avatar" :style="{ width: width + 'px', height: width + 'px' }">
+      <img
+        :src="'data:image/jpeg;base64,' + avatar"
+        v-if="username"
+      />
+    </span>
+  </template>
 
 
 <script setup>
-import { getCurrentInstance, onMounted , ref} from 'vue';
-import { getAvatar } from '../api/postFunc';
-
-const { proxy } = getCurrentInstance();
-
-
 const props = defineProps({
     username: {
         type: String,
