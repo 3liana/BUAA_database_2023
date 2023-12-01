@@ -18,8 +18,8 @@ urlpatterns = [
                   # path('demo/', User.Demo.as_view()),
                   path('', include(router.urls)),
                   # 关于账号的功能
-                  path('register/', account.Register.as_view()),
-                  path('login/', account.Login.as_view()),
+                  path('register', account.Register.as_view()),
+                  path('login', account.Login.as_view()),
                   path('setAvator', account.SetAvator.as_view()),
                   path('getAvator', account.GetAvator.as_view()),
                   path('myPosts', account.MyPosts.as_view()),

@@ -32,8 +32,6 @@ class Register(APIView):
     # 普通用户
     def post(self, request):
         data = request.data
-        # print("register data:")
-        # print(request.data)
         name = str(data.get('name'))
         password = str(data.get('password'))
         phone = str(data.get('phone'))
