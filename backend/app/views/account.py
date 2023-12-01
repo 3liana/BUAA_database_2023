@@ -65,7 +65,7 @@ class Login(APIView):
         password = data.get('password')
         value = 0
         type = -1
-        debug = True
+        debug = False
         if (debug):
             all_user = User.objects.all()
             for user in all_user:
@@ -85,6 +85,8 @@ class Login(APIView):
         if value == 0:
             if password != item.password:
                 value = 2  # 密码错误
+            elif type == 0 and item.isBaned:
+                value = 3
             else:
                 # 成功登录
                 request.session['name'] = name
