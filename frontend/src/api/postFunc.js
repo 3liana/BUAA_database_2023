@@ -224,3 +224,21 @@ export function cancelOrder(order_id) {
 	//data.append("order_id", order_id);
 	return post('/api/cancelOrder', data);
 }
+
+export function createTag(name) {
+	var data = new FormData();
+	data.append("name", name);
+	return post('/api/createTag', data);
+}
+
+export function deleteTag(tag_id) {
+	var data = new FormData();
+	data.append("tag_id", tag_id);
+	return post('/api/deleteTag', data);
+}
+
+export function banAUser(username) {
+	var data = new FormData();
+	data.append("username", username);
+	return post('/api/banAUser', data);
+}

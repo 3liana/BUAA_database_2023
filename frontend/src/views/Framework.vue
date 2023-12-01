@@ -28,11 +28,11 @@
                   <!--返回上一页面-->
                   
                     <div class="avatar">
-                      {{ console.log(userInfo.avatar) }}
+                      
                       <template>
                         <div v-if="loading.able">
                         <span class="avatar" :style="{ width: '70px', height:  '70px'}">
-                         {{ console.log(userInfo.avatar) ,console.log(loading.able) }}
+                         
                           <img 
                             v-if="loading.able"
                             :key="loading.key"
@@ -233,8 +233,8 @@ const menus = [
         path: "/settings/userList",
       },
       {
-        name: "公告管理",
-        path: "/settings/noticeList",
+        name: "标签管理",
+        path: "/settings/tagList",
       },
     ],
   },
@@ -260,10 +260,10 @@ const getMyAvatar = async ()=>{
     } else {
         //console.log(userInfo.avatar);  
         //userInfo.avatar = result.base64;
-        console.log(userInfo.value.avatar);  
+        //console.log(userInfo.value.avatar);  
         loading.value.able = true;  
         loading.value.key  += 1;
-        console.log(loading.value.key );
+        //console.log(loading.value.key );
     }
 };
 

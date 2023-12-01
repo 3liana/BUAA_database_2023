@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { ElMessage } from 'element-plus';
-import { useStore } from 'vuex';
-const store = useStore();
+
+
 
 export function post(url, data) {
     return new Promise((resolve,reject)=>{

@@ -95,13 +95,13 @@ const router = createRouter({
           component: () => import("@/views/admin/UserList.vue")
         },
         {
-          path: '/settings/noticeList',
-          name: '用户文件',
+          path: '/settings/tagList',
+          name: '系统文件',
           meta: {
             needLogin: true,
             menuCode: "settings"
           },
-          component: () => import("@/views/admin/NoticeList.vue")
+          component: () => import("@/views/admin/TagList.vue")
         },
 
       ]

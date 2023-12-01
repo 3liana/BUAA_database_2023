@@ -173,10 +173,6 @@ const userMessage = ref({
 })
 
 const postCache = ref({
-    "content" : "123",
-    "title" : "title",
-    "username" : "qwp",
-    "data" : "2021/1/1",
     "post_id" : route.params.post_id,
     "dialog" : false,
     
@@ -186,16 +182,7 @@ const postCache = ref({
 const postTags = ref([]);
 
 //所有tags?
-const tags = ref([
-  {
-    "tag_id":1,
-    "name" : "tag0_test",
-  },
-  {
-    "tag_id":2,
-    "name" : "name2",
-  },
-]);
+const tags = ref([]);
 
 //true->选择
 const checkTags = ref({});
@@ -329,34 +316,7 @@ const showDialog1 = ()=> {
 
 const comFormData = ref({});
 
-const commodities = ref([
-    {
-        'commodity_id': "1",
-        'name': "item.name",
-        'dc': "item.description",
-        'price': "item.price",
-        'state': 0,
-        'photos' :[{
-          'photo_id': "photo_1",
-          'path': "path_1",
-          }
-        ],
-    },
-    {
-      'commodity_id': "2",
-        'name': "testCom2",
-        'dc': "dec2",
-        'price': "120",
-        'state': 0,
-        'photos' :[{
-          'photo_id': "photo_2",
-          'path': "path_2",
-          }
-        ],
-    },
-
-
-]);
+const commodities = ref([]);
 
 
 onMounted(() => {
