@@ -140,7 +140,7 @@ class GetAvator(APIView):
         return Response({
             'value': value,
             'path': path,
-            'base64':changePicPath(path)
+            'base64': changePicPath(path)
         })
 
 
@@ -291,4 +291,21 @@ class CheckBan(APIView):
         return Response({
             'value': value,
             'isBaned': isBaned,
+        })
+
+
+class AllUsers(APIView):
+    def post(self, req: Request):
+        users = User.objects.all()
+        return_data = []
+        for user in users:
+            return_data.append({
+                'username': user.username,
+                'password': user.password,
+                'phone': user.phone,
+                'wechat': user.wechat,
+                'isBand': user.isBaned,
+            })
+        return Response({
+            'return_data': return_data
         })

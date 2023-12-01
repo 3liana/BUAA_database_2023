@@ -30,6 +30,7 @@ urlpatterns = [
                   path('getUserInfo', account.GetUserInfo.as_view()),
                   path('banAUser', account.BanAUser.as_view()),
                   path('checkBan', account.CheckBan.as_view()),
+                  path('allUsers', account.AllUsers.as_view()),
                   # 关于帖子的功能
                   path('createPost', posts.CreatePost.as_view()),
                   path('deletePost', posts.DeletePost.as_view()),
