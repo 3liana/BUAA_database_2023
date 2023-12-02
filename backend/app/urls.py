@@ -31,6 +31,8 @@ urlpatterns = [
                   path('banAUser', account.BanAUser.as_view()),
                   path('checkBan', account.CheckBan.as_view()),
                   path('allUsers', account.AllUsers.as_view()),
+                  path('setAvatorAdmin', account.SetAvatorAdmin.as_view()),
+                  path('getAvatorAdmin', account.GetAvatorAdmin.as_view()),
                   # 关于帖子的功能
                   path('createPost', posts.CreatePost.as_view()),
                   path('deletePost', posts.DeletePost.as_view()),

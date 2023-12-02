@@ -36,6 +36,10 @@ class Register(APIView):
         password = str(data.get('password'))
         phone = str(data.get('phone'))
         wechat = str(data.get('wechat'))
+        # name = "ddfsfdd"
+        # password = "dwe3443"
+        # phone = "3243556"
+        # wechat = "fdg23gfdg"
         if not check_username(name):
             return Response({"value": 3})  # 此用户名已被注册
         if not check_wechat(wechat):
@@ -132,6 +136,55 @@ class GetAvator(APIView):
         try:
             user = User.objects.get(username=username)
             pic = Avator.objects.get(user=user)
+            path = pic.file.path
+            value = 0
+        except Exception as e:
+            print(e)
+            value = 1
+        return Response({
+            'value': value,
+            'path': path,
+            'base64': changePicPath(path)
+        })
+
+
+class SetAvatorAdmin(APIView):
+    def post(self, req: Request):
+        value = -1
+        avator_id = -1
+        file = req.FILES.get('photo')
+        try:
+            username = req.data['username']  # 得到用户名
+            user = Administrator.objects.get(username=username)  # 查找用户对象
+            try:
+                item = Avator.objects.get(admin=user)
+                item.file = file
+                item.save()
+                avator_id = item.id
+            except Avator.DoesNotExist:
+                pic = Avator.objects.create(
+                    file=file,
+                    admin=user,
+                )
+                pic.save()
+                avator_id = pic.id
+            value = 0
+        except Exception as e:
+            print(e)
+            value = 1
+        return Response({
+            'value': value,
+            'avator_id': avator_id,
+        })
+
+
+class GetAvatorAdmin(APIView):
+    def post(self, req: Request):
+        username = req.data['username']
+        path = ''
+        try:
+            user = Administrator.objects.get(username=username)
+            pic = Avator.objects.get(admin=user)
             path = pic.file.path
             value = 0
         except Exception as e:
