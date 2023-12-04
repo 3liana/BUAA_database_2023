@@ -57,7 +57,39 @@
         </el-form-item>
     </div>
      <!-- 展示所有公告的内容 -->
+
+
      <div id="content" style="overflow:auto">
+        <div class="common-list" >
+          <div class="common-wrap" v-for="item in allNotices">
+            
+            <el-card class="box-card">
+                <template #header>
+                <div class="card-header">
+                    <span class="post_title">{{item.title }}</span>
+                    <el-button class="button" text>公告编号：{{ item.notice_id }}</el-button>
+                </div>
+                </template>
+                <p class="post-info">内容: {{ item.content }}</p>
+                <template #footer>
+                    <p>发布人: {{ item.username }}</p> 
+                    <p>发布于: {{ item.time }}</p>
+
+                    <div v-if="userMessage.usertype==1">
+                <el-button class="deleteButton"
+                @click="deleteThisNotice(item.notice_id)">
+                    删除公告
+                </el-button>
+            </div>
+                </template>
+            </el-card>
+
+        </div>
+     </div>
+
+    </div>
+
+     <!-- <div id="content" style="overflow:auto">
         <div class="common-list" >
           <div class="common-wrap" v-for="item in allNotices">
             <div class="common-item">
@@ -65,9 +97,10 @@
               <div class="post-content">
                 <p class="post-info"> 公告编号：{{ item.notice_id }}</p>
                 <p class="post-title">公告标题：{{item.title }}</p>
-                <p class="post-info">发布人: {{ item.username }}</p>
-                <p class="post-info">发布于: {{ item.time }}</p>
                 <p class="post-info">内容: {{ item.content }}</p>
+                 <p class="post-info">发布人: {{ item.username }}</p> 
+                <p class="post-info">发布于: {{ item.time }}</p>
+                
               </div>
               <div v-if="userMessage.usertype==1">
                 <el-button @click="deleteThisNotice(item.notice_id)">
@@ -79,7 +112,7 @@
         </div>
      </div>
 
-    </div>
+    </div> -->
 </template>
 
 <script setup>
@@ -181,13 +214,14 @@ const deleteThisNotice = (notice_id) => {
     });
 };
 
+const activeNames = ref(['1'])
 
 </script>
     
 <style>
- .post-title {
-    margin-bottom: 10px;
-  font-size: 18px;
+ .post_title {
+
+  font-size: 25px;
   font-weight: bold;
 }
 
@@ -212,14 +246,30 @@ const deleteThisNotice = (notice_id) => {
   font-weight: bold;
   }
 
-  
-  .common-list {
-    clear: both;
-    margin-left: 22vw;
-    margin-right: 22vw;
-   
-  }
   .common-wrap {
       margin-left: 22px;
     }
+
+    .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.text {
+  font-size: 14px;
+}
+
+.item {
+  margin-bottom: 18px;
+}
+
+.box-card {
+    margin-top: 20px;
+  width: 700px;
+}
+.deleteButton{
+    margin-left: 550px;
+}
+
 </style>

@@ -7,12 +7,12 @@
         >
               <!-- 展示所有帖子的内容 -->
       <div id="content" style="overflow:auto">
-        <p>我的帖子</p>
+        <p class="title">我的帖子</p>
+        <el-divider />
         <div class="common-list" >
+          <div class="post-separator">
           <div class="common-wrap" v-for="item in posts" :key="item.post_id">
             <div class="common-item">
-              <div class="post-separator"></div>
-              
              <router-link :to="`/main/post/${item.post_id}`"
               type="primary"
               size="large"
@@ -37,6 +37,8 @@
             @click="showDialog1(item.post_id)">
                 修改帖子
             </el-button>
+            </div>
+            </div>
             <Dialog
                 :show="dialogConfig1.show"
                 :title="dialogConfig1.title"
@@ -87,7 +89,7 @@
               </div>
               </div>
               </div>
-        </div>
+       
         </v-tabs>
     </v-container>
 
@@ -202,6 +204,14 @@ const submitPost = async () => {
 </script>
 
 <style lang="scss" scoped>
+
+.title{
+  font-size: 30px;
+  margin-left: 20px;
+  margin-top: 30px;
+  font-weight: bolder;
+}
+
 .post-title {
     margin-bottom: 10px;
   font-size: 18px;
@@ -218,9 +228,10 @@ const submitPost = async () => {
 }
 
   .post-separator {
-  height: 1px;
-  background-color: #ccc;
-  margin: 10px 0;
+    display: flex;
+    flex-direction:row;
+    flex-wrap:wrap;
+    justify-content:left;
   }
 
   .post-info {
@@ -229,14 +240,22 @@ const submitPost = async () => {
   font-weight: bold;
   }
   
-  .common-list {
-    clear: both;
-    margin-left: 22vw;
-    margin-right: 22vw;
-   
+  .common-item{
+  background-color: rgba(251, 247, 255, 0.8); 
+  width: 330px;
+  /* border: 15px solid rgba(214, 176, 255, 0.5); */
+  padding: 20px;
+  margin: 25px;
+  border-radius: 20px;
+  
+  transition: all .3s ease-in 0s;
+  -webkit-transition: all .3s;
+
+  } 
+
+  .common-item:hover{
+    box-shadow: 10px 10px 5px #888888;
+    transform: scale(1.2);
   }
-  .common-wrap {
-      margin-left: 22px;
-    }
 
 </style>

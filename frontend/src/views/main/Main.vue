@@ -1,5 +1,4 @@
 <template>
-  <div>
       <el-form-item>
           <el-button
           color="#626aef"
@@ -109,6 +108,10 @@
           @click="showDialog1">
               修改帖子
           </el-button>
+          </div>
+
+        </div>   <!--common-item -->
+        
           <Dialog
               :show="dialogConfig1.show"
               :title="dialogConfig1.title"
@@ -126,7 +129,6 @@
               >
               <el-form-item>
               <h2>修改帖子{{ formData1.post_id = item.post_id }}</h2>
-
               <el-form-item label="title">
                  <div class="modal-content">
                       <el-input
@@ -155,13 +157,11 @@
               </el-form-item>
               </el-form>
           </Dialog>
-          </div>
-        </div>
-      </div>
+
         </div>
       </div>
     </div>
-  </div>
+  </div> 
   
   <el-backtop :right="100" :bottom="100" />
 </template>
@@ -544,7 +544,7 @@ margin: 0;
   clear: both;
 } */
 
- .common-wrap{
+ .common-item{
   background-color: rgba(251, 247, 255, 0.8); 
   width: 330px;
   /* border: 15px solid rgba(214, 176, 255, 0.5); */
@@ -557,9 +557,10 @@ margin: 0;
 
   } 
 
-  .common-wrap:hover{
+  .common-item:hover{
     box-shadow: 10px 10px 5px #888888;
     transform: scale(1.2);
   }
+
 
 </style>
