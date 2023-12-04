@@ -33,7 +33,7 @@ import Dialog from '@/components/Dialog.vue';
 import { result } from 'lodash';
 import {ref, reactive, getCurrentInstance} from "vue";
 import { useRoute, useRouter } from 'vue-router';
-import { setAvatar , getAvatar} from "../api/postFunc";
+import { setAvatar ,  setAvatorAdmin} from "../api/postFunc";
 
 const { proxy } = getCurrentInstance();
 const route = useRoute();
@@ -80,7 +80,13 @@ const submitForm= async ()=> {
     };
     console.log(params);
     var value;
-    value = setAvatar(params);
+    console.log(cookieUserInfo.usertype);
+    if (cookieUserInfo.usertype == 0) {
+        value = setAvatar(params);
+    } else {
+        value = setAvatorAdmin(params);
+    }
+    
     value.then((result)=>{
         if (result.value == 0) {
             proxy.Message.success("上传头像成功");

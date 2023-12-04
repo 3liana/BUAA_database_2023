@@ -82,7 +82,7 @@
                 </div>
                 <div class="no-account">
                     <!--bass.scss中加了a-link;忘记密码就重置所以传2,没有账号就注册所以传0-->
-                    <a href="javascript:void(0)" class="a-link" @click="showPanel(2)">忘记密码?</a>
+                    
                     <a href="javascript:void(0)" class="a-link" @click="showPanel(0)">没有账号</a>
                 </div>
             </el-form-item>

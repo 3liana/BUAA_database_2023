@@ -25,7 +25,7 @@
 <script setup>
   import { ref, reactive, getCurrentInstance } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { getAvatar } from "../api/postFunc";
+import { getAvatar, getAvatorAdmin } from "../api/postFunc";
 const { proxy } = getCurrentInstance();
 const router = useRouter();
 const route = useRoute();
@@ -37,6 +37,10 @@ const props = defineProps({
     type: Object,
     default: null,
   },
+});
+
+const userMessage = ref({
+  "usertype" : proxy.VueCookies.get("userInfo").usertype,
 });
 
 const localFile = ref(null);
@@ -53,10 +57,18 @@ const uploadImage = async (file) => {
 };
 
 const getMyAvatar = ()=>{
+  if(userMessage.value.usertype == 0) {
+    console.log(userMessage.value.usertype);
   var data = getAvatar(proxy.VueCookies.get("userInfo").name);
   data.then((result)=>{
     return result.base64;
-  })
+  });
+  } else {
+    var data = getAvatorAdmin(proxy.VueCookies.get("userInfo").name);
+    data.then((result)=>{
+    return result.base64;
+  });
+  }
 };
 
 </script>

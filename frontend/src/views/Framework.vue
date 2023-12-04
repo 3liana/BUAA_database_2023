@@ -133,7 +133,7 @@ import { useRouter, useRoute } from "vue-router";
 import UpdateAvatar from "./UpdateAvatar.vue";
 import Avatar from "../components/Avatar.vue";
 import Dialog from "../components/Dialog.vue";
-import {changePassWord, getAvatar} from "../api/postFunc";
+import {changePassWord, getAvatar, getAvatorAdmin} from "../api/postFunc";
 
 
 const { proxy } = getCurrentInstance();
@@ -146,6 +146,7 @@ const timestamp = ref(0);
 const userInfo = ref({
   "name" : proxy.VueCookies.get("userInfo").name,
   "avatar" : null,
+  "usertype" : proxy.VueCookies.get("userInfo").usertype,
 });
 
 const menus = [
@@ -231,7 +232,13 @@ const loading = ref({
 });
 
 const getMyAvatar = async ()=>{
-    var result =  await getAvatar(proxy.VueCookies.get("userInfo").name);
+    var result;
+    console.log(userInfo.value.usertype);
+    if (userInfo.value.usertype == 0) {
+      result = await getAvatar(proxy.VueCookies.get("userInfo").name);
+    }  else {
+      result = await getAvatorAdmin(proxy.VueCookies.get("userInfo").name);
+    }
     userInfo.value.avatar = result.base64;
     if (result.value != 0) {
         proxy.Message.error("获得头像失败");

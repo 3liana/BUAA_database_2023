@@ -25,11 +25,25 @@ export function setAvatar(params) {
 	return post('/api/setAvator', data);
 }
 
+export function setAvatorAdmin(params) {
+	var data = new FormData();
+	data.append("username", params.username);
+	data.append("photo", params.photo);
+	return post('/api/setAvatorAdmin', data);
+}
+
 export function getAvatar(username) {
 	var data = new FormData();
 	data.append("username", username);
 	//console.log(username);
 	return post('/api/getAvator', data);
+}
+
+export function getAvatorAdmin(username) {
+	var data = new FormData();
+	data.append("username", username);
+	//console.log(username);
+	return post('/api/getAvatorAdmin', data);
 }
 
 export function changePassWord(params) {
