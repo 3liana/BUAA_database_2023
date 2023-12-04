@@ -267,6 +267,8 @@ const activeNames = ref(['1'])
 .box-card {
     margin-top: 20px;
   width: 700px;
+  background-color:antiquewhite;
+  margin-left: 300px;
 }
 .deleteButton{
     margin-left: 550px;
