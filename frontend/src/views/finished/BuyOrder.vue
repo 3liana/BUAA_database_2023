@@ -3,10 +3,11 @@
         <p>已完成的订单(买进)</p>
         <div id="content" style="overflow:auto">
         <div class="common-list" >
+          <div class="seperate">
           <div class="common-wrap" v-for="item in orders" :key="item.order_id">
+            <el-card class="box-card">
+    
             <div class="common-item">
-              <div class="post-separator"></div>
-              
              <router-link :to="`/main/post/${item.commodity.post_id}`"
               type="primary"
               size="large"
@@ -15,16 +16,25 @@
               <div class="post-content">
                 <p class="post-info">商品详情: {{ item.commodity.dc }}</p>
                 <p class="post-info">订单编号: {{ item.order_id }}</p>
-                
-                <p class="post-title">-卖家信息-</p>
-                <p class="post-info">卖家: {{ item.saler_name }}</p>
-                <p class="post-info">电话号码: {{ item.phone }}</p>
-                <p class="post-info">微信号: {{ item.wechat }}</p>
-
-                <p class="post-info"> 买家:{{ item.buyer_name }}</p>
-
-                <p class="post-info">交易于: {{ item.time }}</p>
-                
+                <table>
+                <tr>
+                  <td>卖家</td>
+                  <td>{{ item.saler_name }}</td>
+                </tr>
+                <tr>
+                  <td>电话号码</td>
+                  <td>{{ item.phone }}</td>
+                </tr><tr>
+                  <td>微信号</td>
+                  <td>{{ item.wechat }}</td>
+                </tr><tr>
+                  <td>买家</td>
+                  <td>{{ item.buyer_name }}</td>
+                </tr><tr>
+                  <td>交易时间</td>
+                  <td>{{ item.time }}</td>
+                </tr>
+              </table>
               </div>
               <div>
                 <el-button @click="cancel(item.order_id)">
@@ -32,10 +42,11 @@
                 </el-button>
               </div>
               </div>
+            </el-card>
               </div>
         </div>
         </div>
-
+      </div>
     </div>
 </template>
 
@@ -115,9 +126,9 @@
 </script>
 
 <style lang="scss" scoped>
-      .post-title {
+.post-title {
     margin-bottom: 10px;
-  font-size: 18px;
+  font-size: 30px;
   font-weight: bold;
 }
 
@@ -140,5 +151,28 @@
   margin-bottom: 5px;
   font-size: 14px;
   font-weight: bold;
+  }
+
+  table, td, th
+{
+    border:1px solid green;
+}
+
+td{
+  text-align: center;
+  padding: 10px;
+}
+.box-card {
+  width: 500px;
+}
+.el-button{
+  margin-top: 20px;
+}
+
+.seperate{
+    display: flex;
+    flex-direction:row;
+    flex-wrap:wrap;
+    justify-content:left;
   }
 </style>

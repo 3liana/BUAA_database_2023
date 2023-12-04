@@ -3,27 +3,28 @@
     <div class="container" fluid>
         
         <div class="card"  style="margin-top: 20px;">
-          <p>帖子详情：</p>
           <div class="post-content">
-                <p class="post-info">帖子编号: {{ postCache.post_id }}</p>
-                <p class="post-info">作者: {{ postCache.username }}</p>
-                <p class="post-info">内容: {{ postCache.content }}</p>
-                <p class="post-info">发布于: {{ postCache.data }}</p>
-                <p class="post-info"> tags: </p>
+                <p class="post_id">帖子编号: {{ postCache.post_id }}</p>
+                <p class="post_title">{{ postCache.title }}</p>
+                <p class="post_info">作者: {{ postCache.username }}</p>
+                <p class="post_info">内容: {{ postCache.content }}</p>
+                <p class="post_info">发布于: {{ postCache.data }}</p>
+                
                 <div class="tag" v-for="tag in postTags" :key="tag.tag_id">
                   <button @click="deleteTag(tag.tag_id)">
                     {{ tag.name }}
                   </button>
                 </div>
-          </div>
-
-          <el-form-item v-if="postCache.username==userMessage.username">
+            <p v-if="postCache.username==userMessage.username">
             <el-button
               type="primary"
               size="large"
               @click="showDialog1">
               添加tag
-            </el-button>
+            </el-button> </p>   
+          </div>
+
+          <el-form-item v-if="postCache.username==userMessage.username">
             <Dialog
             :show="dialogConfig1.show"
             :title="dialogConfig1.title"
@@ -133,10 +134,7 @@
         </el-form>
     </Dialog>
     </el-form-item>
-    
-  
 
-    <p>帖子包含商品：</p>
     <div>
       <PostGoodTable
         :commodities="commodities"
@@ -433,28 +431,49 @@ const addComPhoto = (item)=>{
   display: inline-block;
   margin-right: 5px;
   padding: 5px;
-  background-color: #f0f0f0;
+  background-color: #905ba9;
+  color: white;
+  margin-top: 20px;
+  margin-bottom: 10px;
 }
 
-.post-info {
-  margin-bottom: 5px;
-  }
+.post_info {
+  margin-bottom: 10px;
+  margin-left: 20px;
+  
+}
 
-  .post-content {
+.post-content {
+  background-color: rgba(251, 247, 255, 0.8);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   padding: 10px;
   margin-top: 10px;
   border-radius: 4px;
+  width: 800px;
+  margin-left: 150px;
+  /* height: 300px; */
+  border-radius: 20px;
+}
+
+.post_title{
+  color: #905ba9;
+  text-align: center;
+  font-size: 40px;
+}
+
+.post_id{
+  text-align: right;
 }
 
 .post-separator {
   height: 1px;
   background-color: #ccc;
   margin: 10px 0;
-  }
+}
 
 .card{
   color: "#F5F5F5";
+  
   margin-top: 20px;
 }
 
