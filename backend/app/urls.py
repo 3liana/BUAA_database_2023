@@ -9,6 +9,8 @@ from app.views import commodities
 from app.views import orders
 from app.views import tags
 from app.views import notice
+from app.views import comments
+from app.views import userinfo
 
 router = DefaultRouter()
 # /user/由UserViewSet去处理
@@ -45,6 +47,7 @@ urlpatterns = [
                   path('deletePost', posts.DeletePost.as_view()),
                   path('changePost', posts.ChangePost.as_view()),
                   path('getUser', posts.GetUser.as_view()),
+                  path('getPostsWithTag', posts.GetPostsWithTag.as_view()),
                   # 关于商品的功能
                   path('createCommodity', commodities.CreateCommodity.as_view()),
                   path('getCommodityPictures', commodities.GetCommodityPictures.as_view()),
@@ -56,6 +59,11 @@ urlpatterns = [
                   path('createOrder', orders.CreateOrder.as_view()),
                   path('cancelOrder', orders.CancelOrder.as_view()),
                   path('getOrder', orders.GetOrder.as_view()),
+                  # 订单 新功能
+                  path('checkStatus', orders.CheckStatus.as_view()),
+                  path('status0_1', orders.Status0_1.as_view()),
+                  path('status1_2', orders.Status1_2.as_view()),
+                  path('commentOnPeople', orders.MakeCommentOnPeople.as_view()),
                   # 关于标签的功能
                   path('createTag', tags.CreateTag.as_view()),
                   path('allTags', tags.AllTags.as_view()),
@@ -65,4 +73,14 @@ urlpatterns = [
                   path('createNotice', notice.CreateNotice.as_view()),
                   path('allNotice', notice.AllNotice.as_view()),
                   path('deleteNotice', notice.DeleteNotice.as_view()),
+                  # 关于评论的功能
+                  path('commentToPost', comments.CommentToPost.as_view()),
+                  path('commentToComment', comments.CommentToComment.as_view()),
+                  path('getPostFirstComments', comments.GetPostFirstComments.as_view()),
+                  path('getFirstCommentsSecondComments', comments.GetFirstCommentsSecondComments.as_view()),
+                  path('deleteFirstCommen', comments.DeleteFirstComment.as_view()),
+                  path('deleteSecondComment', comments.DeleteSecondComment.as_view()),
+                  # 关于个人信息的功能
+                  path('setMotto', userinfo.SetMotto.as_view()),
+                  path('getInfo', userinfo.GetInfo.as_view()),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

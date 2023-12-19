@@ -35,6 +35,11 @@ class DeletePost(APIView):
         post_id = req.data['post_id']
         value = 1
         try:
+            # 删除帖子的时候，这个贴子的tag引用次数也要减1
+            post_tags = Tag_Post.objects.filter(post__id=post_id)
+            for post_tag in post_tags:
+                post_tag.tag.num -= 1
+                post_tag.tag.save()
             Post.objects.get(id=post_id).delete()
             value = 0
         except Exception as e:
@@ -85,6 +90,7 @@ class GetPost(APIView):
             'username': post.user.username,
             'date': post.time
         })
+
     def get(self, req: Request):
         post_id = req.query_params.get('post_id')
         if not post_id:
@@ -97,7 +103,6 @@ class GetPost(APIView):
             'username': post.user.username,
             'date': post.time
         })
-
 
 
 class GetAllPosts(APIView):
@@ -190,7 +195,7 @@ class AddTagToPost(APIView):
             item = Tag_Post.objects.get(post__id=post_id, tag__id=tag_id)
         except Tag_Post.DoesNotExist:
             find = False
-        if(not find):
+        if (not find):
             try:
                 tag = Tag.objects.get(id=tag_id)
                 Tag_Post.objects.create(
@@ -207,4 +212,25 @@ class AddTagToPost(APIView):
             value = 2
         return Response({
             'value': value
+        })
+
+
+class GetPostsWithTag(APIView):
+    def post(self, req: Request):
+        # tag_id = req.data['tag_id']
+        tag_name = req.data['tag_name']
+        value = -1
+        post_ids = []
+        try:
+            tag = Tag.objects.get(name=tag_name)
+            tag_posts = Tag_Post.objects.filter(tag=tag)
+            for tag_post in tag_posts:
+                post_ids.append(tag_post.post.id)
+            value = 0
+        except Exception as e:
+            print(e)
+            value = 1
+        return Response({
+            'value': value,
+            'post_ids': post_ids,
         })

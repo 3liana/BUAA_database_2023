@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 # Create your models here.
 NAME_LEN = 10  # tag
@@ -14,6 +15,7 @@ class User(models.Model):
     phone = models.CharField(max_length=PHONE_LEN, blank=True, null=True)  # 可为空
     wechat = models.CharField(max_length=WECHAT_LEN)  # 一个wechat只能注册一个账号，防止恶意注册
     isBaned = models.BooleanField(default=False)
+    motto = models.TextField(default="这个人还没有设置个人简介")
 
 
 class Administrator(models.Model):
@@ -23,7 +25,7 @@ class Administrator(models.Model):
 
 class Post(models.Model):
     time = models.DateTimeField(auto_now=True)
-    title = models.CharField(max_length=TITLE_LEN)
+    title = models.CharField(max_length=TITLE_LEN, unique=True)
     content = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
@@ -44,6 +46,19 @@ class Order(models.Model):
     time = models.DateTimeField(auto_now_add=True)
     saler = models.ForeignKey(User, on_delete=models.CASCADE, related_name='saler_order')
     buyer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='buyer_order')
+    state = models.IntegerField(default=0)
+
+
+class CommentOnPeople(models.Model):
+    time = models.DateTimeField(auto_now_add=True)
+    from_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='from_user')
+    to_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='to_user')
+    txt = models.TextField()
+    # 设置为1到10之间的评分
+    score = models.IntegerField(validators=[
+        MinValueValidator(1),
+        MaxValueValidator(10)
+    ])
 
 
 class Commodity(models.Model):
@@ -64,10 +79,24 @@ class Avator(models.Model):
     file = models.ImageField(upload_to='avator/')
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     admin = models.ForeignKey(Administrator, on_delete=models.CASCADE, null=True)
-    # todo 设置default头像（可以让前端设置 如果没有头像就展示一个default照片
 
 
 # tag_post关系
 class Tag_Post(models.Model):
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
+
+
+# 新功能
+class FirstComment(models.Model):
+    fromUser = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    time = models.DateTimeField(auto_now_add=True)
+    content = models.TextField()
+
+
+class SecondComment(models.Model):
+    fromUser = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    toComment = models.ForeignKey(FirstComment, on_delete=models.CASCADE)
+    time = models.DateTimeField(auto_now_add=True)
+    content = models.TextField()

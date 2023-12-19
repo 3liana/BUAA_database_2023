@@ -82,4 +82,94 @@ class GetOrder(APIView):
         })
 
 
+class CheckStatus(APIView):
+    def post(self, req: Request):
+        order_id = req.data['order_id']
+        value = -1
+        status = -1
+        txt = ''
+        try:
+            order = Order.objects.get(id=order_id)
+            status = order.state
+            if status == 0:
+                txt = '等待卖家放置物品'
+            elif status == 1:
+                txt = '等待买家确认收到'
+            elif status == 2:
+                txt = '订单已完成'
+            value = 0
+        except Exception as e:
+            print(e)
+            value = 1
+        return Response({
+            'value': value,
+            'status': status,
+            'txt': txt
+        })
 
+
+class Status0_1(APIView):
+    def post(self, req: Request):
+        order_id = req.data['order_id']
+        value = -1
+        try:
+            order = Order.objects.get(id=order_id)
+            if not order.state == 0:
+                value = 2
+            else:
+                order.state = 1
+                order.save()
+                value = 0
+        except Exception as e:
+            print(e)
+            value = 1
+        return Response({
+            'value': value
+        })
+
+
+class Status1_2(APIView):
+    def post(self, req: Request):
+        order_id = req.data['order_id']
+        value = -1
+        try:
+            order = Order.objects.get(id=order_id)
+            if not order.state == 1:
+                value = 2
+            else:
+                order.state = 2
+                order.save()
+                value = 0
+        except Exception as e:
+            print(e)
+            value = 1
+        return Response({
+            'value': value
+        })
+
+
+class MakeCommentOnPeople(APIView):
+    # 只有形成订单的两个人才可以互相评价
+    def post(self, req: Request):
+        data = req.data
+        from_username = data['from']
+        to_username = data['to']
+        score = data['score']
+        txt = data['txt']
+        value = -1
+        try:
+            from_user = User.objects.get(username=from_username)
+            to_username = User.objects.get(username=to_username)
+            CommentOnPeople.objects.create(
+                from_user=from_user,
+                to_user=to_username,
+                txt=txt,
+                score=score,
+            )
+            value = 0
+        except Exception as e:
+            print(e)
+            value = 1
+        return Response({
+            'value': value
+        })
