@@ -1,3 +1,7 @@
+![](https://raw.githubusercontent.com/3liana/MyPic/main/2.png)
+
+![](https://raw.githubusercontent.com/3liana/MyPic/main/3.png)
+
 # BUAA_database_2023
 ### 仓库管理（fmy）
 
